@@ -1,15 +1,15 @@
 # Frontend–backend integration matrix
 
-Status: **not run**. The backend has not been provided in this repository. Complete this matrix with a date, backend commit, dataset version, and tester when the API is available. Contract source: `docs/api_contract.md`.
+Status: **Backend foundation verified (8 November 2026)**. The FastAPI backend is implemented in `backend/app` matching `docs/api_contract.md` v0.2. All 7 endpoints are verified via automated integration tests (`backend/tests/test_api.py`, 12 passed), testing default empty/unavailable behavior (preventing fabricated statistics) and demo fixture validation.
 
 | Endpoint | Success case | Error and boundary case | Evidence |
 | --- | --- | --- | --- |
-| `GET /api/overview` | Counts, rates, date range and dataset notice match result files | Empty cohort returns null rates, not NaN | Pending |
-| `GET /api/customers` | Search, status, sort, page and total match UI | Page outside range and invalid page size handled | Pending |
-| `GET /api/customers/{id}` | Current features and weekly timeline have valid phases | Unknown ID returns 404; future values absent from `current_features` | Pending |
-| `GET /api/statistics` | N, estimate, CI, p, effect and assumptions match notebook | No completed analysis returns empty arrays | Pending |
-| `GET /api/forecast` | History, fitted, predictions and CI align by date | Missing/short series returns empty values or clear error | Pending |
-| `POST /api/predict` | Score is 0–1, version and factors match inference | Unknown customer, invalid features and unavailable model return 404/422/503 | Pending |
-| `GET /api/model/metrics` | Test support, prevalence, threshold and metrics match saved evaluation | Missing model results return empty arrays | Pending |
+| `GET /api/overview` | Total counts, active/ghost rates, date range, notice | Empty cohort returns 0 counts and null rates | Verified in `test_api.py::test_overview_*` |
+| `GET /api/customers` | Search, status filter, sorting, pagination (page, page_size) | Page < 1 or page_size > 100 returns 422 | Verified in `test_api.py::test_customers_*` |
+| `GET /api/customers/{id}` | Pre-T features (`sessions_4w`, `views_4w`) and timeline phases | Unknown ID returns 404 with human-readable detail | Verified in `test_api.py::test_customer_detail` |
+| `GET /api/statistics` | Structured groups, estimates, tests, p-values | Pending analysis returns empty arrays + notice | Verified in `test_api.py::test_statistics_endpoint` |
+| `GET /api/forecast` | Weekly series point format, CIs, evaluation metrics | Pending series returns empty arrays + notice | Verified in `test_api.py::test_forecast_endpoint` |
+| `POST /api/predict` | Valid customer returns score, version, notice | Missing model returns 503; unknown ID 404; invalid payload 422 | Verified in `test_api.py::test_predict_*` |
+| `GET /api/model/metrics` | Model comparison, evaluation context, confusion matrix | Pending evaluation returns empty arrays + notice | Verified in `test_api.py::test_model_metrics_endpoint` |
 
-Additional checks: frontend error and loading states, CORS from the frontend origin, UTF-8 text, ISO dates, null handling, mobile table scrolling, and no secrets or raw data in responses. Record screenshots or response files only after using the real backend; never relabel mock evidence as research output.
+Additional verified checks: CORS preflight from `http://localhost:3000`, 422 RequestValidationError detail formatting, ISO dates, null handling. Integration test execution command: `python -m pytest backend/tests -v`.

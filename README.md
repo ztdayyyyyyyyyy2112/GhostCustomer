@@ -4,7 +4,7 @@ STAT3013 project: early detection of silent customer disengagement in e-commerce
 
 ## Current status
 
-The frontend runs with **illustrative mock data**. The dataset, cohort rules, label thresholds, statistical estimates, and trained model are not finalized. Do not present mock values as research results.
+The frontend runs with **illustrative mock data** or connected to the FastAPI backend. The dataset, cohort rules, label thresholds, statistical estimates, and trained model are not finalized. Do not present mock values as research results.
 
 ## Run the frontend
 
@@ -19,10 +19,27 @@ npm run dev
 
 On PowerShell, use `Copy-Item .env.example .env.local` instead of `cp` if needed. Open <http://localhost:3000>. The default `NEXT_PUBLIC_API_MODE=mock` needs no backend. Run `npm run lint` and `npm run build` before a PR.
 
+## Run the backend
+
+Requires Python 3.10+. From the repository root:
+
+```bash
+pip install -r backend/requirements.txt
+python -m uvicorn backend.app.main:app --reload --port 8000
+```
+
+Run backend unit and integration tests:
+
+```bash
+python -m pytest backend/tests -v
+```
+
+Swagger API documentation is available at <http://localhost:8000/docs>. To connect the frontend in real mode, set `NEXT_PUBLIC_API_MODE=real` and `NEXT_PUBLIC_API_URL=http://localhost:8000` in `frontend/.env.local`.
+
 ## Repository layout
 
 - `frontend/`: Next.js dashboard and shared API client.
-- `backend/`: planned FastAPI application.
+- `backend/`: FastAPI application implementing the contract in `docs/api_contract.md`.
 - `data/`: data scripts, notebooks, and ignored raw/processed files.
 - `ai/`: planned model training and inference.
 - `research/`: statistics, regression, and forecasting work.
