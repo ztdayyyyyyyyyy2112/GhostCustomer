@@ -85,8 +85,8 @@ export interface StatisticEstimate {
   name: string;
   n: number;
   estimate: number;
-  ci_low: number;
-  ci_high: number;
+  ci_low: number | null;
+  ci_high: number | null;
   method: string;
   unit: string;
 }

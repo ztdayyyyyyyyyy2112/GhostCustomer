@@ -54,7 +54,7 @@ For charts and summary tables, each `groups[]` item proposes `name`, `metric`, `
 {"history":[],"fitted":[],"predictions":[],"lower_ci":[],"upper_ci":[],"method":null,"mae":null,"rmse":null,"smape":null,"train_end":null,"unit":null,"series_length":null,"dataset_notice":"Forecast unavailable until time-series analysis runs"}
 ```
 
-Each history/prediction point is `{ "date": "2026-02-16", "value": 0.2 }`. CI arrays have matching dates and lengths when present. Do not plot a forecast over an unsupported horizon.
+Each history/prediction point is `{ "date": "2026-02-16", "value": 0.2 }`. These values are ghost rates in `[0, 1]`; interval bounds should also stay within the valid rate range. CI arrays have matching dates and lengths when present. Do not plot a forecast over an unsupported horizon.
 
 `fitted[]` is optional and contains in-sample fitted values only. `train_end` marks the last training date; `unit` is `day` or `week`; `series_length` counts usable observations. The frontend draws observed, fitted, and future series separately without connecting unrelated periods.
 
