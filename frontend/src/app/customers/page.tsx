@@ -63,25 +63,155 @@ async function CustomersContent({ searchParams }: { searchParams: Promise<RawPar
   const firstItem = result.total === 0 ? 0 : (result.page - 1) * result.page_size + 1;
   const lastItem = Math.min(result.page * result.page_size, result.total);
 
-  return <>
-    <div className="title-row"><div><h1>Danh sách khách hàng</h1><p className="subtitle">Tìm và xem từng snapshot. Điểm rủi ro chỉ là xác suất ước lượng của mô hình khi đã có model hợp lệ.</p></div><span className="date-chip">{result.total.toLocaleString("vi-VN")} kết quả</span></div>
-    <DataNotice />
-    <form className="filter-panel" action="/customers" method="get" aria-label="Tìm kiếm và lọc khách hàng">
-      <label className="filter-field filter-search">Mã khách hàng<input name="search" type="search" defaultValue={query.search ?? ""} placeholder="Ví dụ: C001" /></label>
-      <label className="filter-field">Trạng thái<select name="status" defaultValue={query.status ?? ""}><option value="">Tất cả</option>{statuses.map((status) => <option value={status} key={status}>{statusLabels[status]}</option>)}</select></label>
-      <label className="filter-field">Sắp xếp theo<select name="sort" defaultValue={query.sort}>{sortOptions.map((option) => <option value={option.value} key={option.value}>{option.label}</option>)}</select></label>
-      <label className="filter-field">Thứ tự<select name="order" defaultValue={query.order}><option value="desc">Giảm dần</option><option value="asc">Tăng dần</option></select></label>
-      <label className="filter-field filter-size">Mỗi trang<select name="page_size" defaultValue={query.page_size}><option value="2">2</option><option value="10">10</option><option value="20">20</option><option value="50">50</option></select></label>
-      <button type="submit" className="primary-button">Áp dụng</button>
-    </form>
+  return (
+    <>
+      <div className="title-row">
+        <div>
+          <h1>Danh sách khách hàng</h1>
+          <p className="subtitle">
+            Tìm và xem từng snapshot. Điểm rủi ro chỉ là xác suất ước lượng của mô hình khi đã có model hợp lệ.
+          </p>
+        </div>
+        <span className="date-chip">{result.total.toLocaleString("vi-VN")} kết quả</span>
+      </div>
+      <DataNotice />
+      <form className="filter-panel" action="/customers" method="get" aria-label="Tìm kiếm và lọc khách hàng">
+        <label className="filter-field filter-search">
+          Mã khách hàng
+          <input
+            name="search"
+            type="search"
+            defaultValue={query.search ?? ""}
+            placeholder="Ví dụ: C001"
+            aria-label="Tìm kiếm theo mã khách hàng"
+          />
+        </label>
+        <label className="filter-field">
+          Trạng thái
+          <select name="status" defaultValue={query.status ?? ""} aria-label="Lọc theo trạng thái">
+            <option value="">Tất cả</option>
+            {statuses.map((status) => (
+              <option value={status} key={status}>
+                {statusLabels[status]}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="filter-field">
+          Sắp xếp theo
+          <select name="sort" defaultValue={query.sort} aria-label="Chọn trường sắp xếp">
+            {sortOptions.map((option) => (
+              <option value={option.value} key={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="filter-field">
+          Thứ tự
+          <select name="order" defaultValue={query.order} aria-label="Thứ tự hiển thị">
+            <option value="desc">Giảm dần</option>
+            <option value="asc">Tăng dần</option>
+          </select>
+        </label>
+        <label className="filter-field filter-size">
+          Mỗi trang
+          <select name="page_size" defaultValue={query.page_size} aria-label="Số dòng mỗi trang">
+            <option value="2">2</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+          </select>
+        </label>
+        <button type="submit" className="primary-button" aria-label="Áp dụng bộ lọc">
+          Áp dụng
+        </button>
+      </form>
 
-    {result.items.length === 0 ? <section className="empty-panel"><h2>Không có khách hàng phù hợp</h2><p>Thử tìm mã khác hoặc bỏ bộ lọc hiện tại.</p><Link className="text-link" href="/customers">Xóa bộ lọc</Link></section> : <section className="table-panel" aria-label="Bảng khách hàng">
-      <div className="table-scroll"><table className="customer-table"><thead><tr><th scope="col">Khách hàng</th><th scope="col">Snapshot</th><th scope="col">Trạng thái</th><th scope="col" className="numeric">Phiên</th><th scope="col" className="numeric">Lượt xem</th><th scope="col" className="numeric">Suy giảm</th><th scope="col" className="numeric">Risk score</th><th scope="col"><span className="sr-only">Chi tiết</span></th></tr></thead><tbody>{result.items.map((customer) => <tr key={`${customer.customer_id}-${customer.snapshot_date}`}><td className="customer-id">{customer.customer_id}</td><td>{customer.snapshot_date}</td><td><CustomerStatusBadge status={customer.status} /></td><td className="numeric">{count(customer.sessions)}</td><td className="numeric">{count(customer.views)}</td><td className="numeric">{percentage(customer.decay)}</td><td className="numeric">{percentage(customer.risk_score)}</td><td><Link className="row-link" href={`/customers/${encodeURIComponent(customer.customer_id)}`}>Xem chi tiết<span aria-hidden="true"> →</span></Link></td></tr>)}</tbody></table></div>
-      <footer className="table-footer"><p>Hiển thị {firstItem}–{lastItem} / {result.total} khách hàng</p><nav className="pagination" aria-label="Phân trang">{query.page > 1 && <Link href={pageHref(query, query.page - 1)}>← Trước</Link>}<span>Trang {query.page} / {totalPages}</span>{query.page < totalPages && <Link href={pageHref(query, query.page + 1)}>Sau →</Link>}</nav></footer>
-    </section>}
-  </>;
+      {result.items.length === 0 ? (
+        <section className="empty-panel" aria-live="polite">
+          <h2>Không có khách hàng phù hợp</h2>
+          <p>Thử tìm mã khác hoặc bỏ bộ lọc hiện tại.</p>
+          <Link className="text-link" href="/customers">
+            Xóa bộ lọc
+          </Link>
+        </section>
+      ) : (
+        <section className="table-panel" aria-label="Bảng khách hàng">
+          <div className="table-scroll">
+            <table className="customer-table">
+              <thead>
+                <tr>
+                  <th scope="col">Khách hàng</th>
+                  <th scope="col">Snapshot</th>
+                  <th scope="col">Trạng thái</th>
+                  <th scope="col" className="numeric">Phiên</th>
+                  <th scope="col" className="numeric">Lượt xem</th>
+                  <th scope="col" className="numeric">Suy giảm</th>
+                  <th scope="col" className="numeric">Risk score</th>
+                  <th scope="col"><span className="sr-only">Chi tiết</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                {result.items.map((customer) => (
+                  <tr key={`${customer.customer_id}-${customer.snapshot_date}`}>
+                    <td className="customer-id">{customer.customer_id}</td>
+                    <td>{customer.snapshot_date}</td>
+                    <td><CustomerStatusBadge status={customer.status} /></td>
+                    <td className="numeric">{count(customer.sessions)}</td>
+                    <td className="numeric">{count(customer.views)}</td>
+                    <td className="numeric">{percentage(customer.decay)}</td>
+                    <td className="numeric">{percentage(customer.risk_score)}</td>
+                    <td>
+                      <Link
+                        className="row-link"
+                        href={`/customers/${encodeURIComponent(customer.customer_id)}`}
+                        aria-label={`Xem chi tiết khách hàng ${customer.customer_id}`}
+                      >
+                        Xem chi tiết<span aria-hidden="true"> →</span>
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <footer className="table-footer">
+            <p>
+              Hiển thị {firstItem}–{lastItem} / {result.total} khách hàng
+            </p>
+            <nav className="pagination" aria-label="Phân trang">
+              {query.page > 1 && (
+                <Link href={pageHref(query, query.page - 1)} aria-label="Trang trước">
+                  ← Trước
+                </Link>
+              )}
+              <span>
+                Trang {query.page} / {totalPages}
+              </span>
+              {query.page < totalPages && (
+                <Link href={pageHref(query, query.page + 1)} aria-label="Trang kế tiếp">
+                  Sau →
+                </Link>
+              )}
+            </nav>
+          </footer>
+        </section>
+      )}
+    </>
+  );
 }
 
 export default function CustomersPage({ searchParams }: { searchParams: Promise<RawParams> }) {
-  return <main className="dashboard-shell"><AppHeader current="customers" /><div className="dashboard-content"><p className="eyebrow">KHÁCH HÀNG / CUSTOMERS</p><Suspense fallback={<div className="loading-bar" aria-label="Đang tải danh sách" />}><CustomersContent searchParams={searchParams} /></Suspense></div></main>;
+  return (
+    <main className="dashboard-shell">
+      <AppHeader current="customers" />
+      <div className="dashboard-content">
+        <p className="eyebrow">KHÁCH HÀNG / CUSTOMERS</p>
+        <Suspense fallback={<div className="loading-bar" aria-label="Đang tải danh sách" />}>
+          <CustomersContent searchParams={searchParams} />
+        </Suspense>
+      </div>
+    </main>
+  );
 }
