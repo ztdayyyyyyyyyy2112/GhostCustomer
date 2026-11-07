@@ -77,7 +77,13 @@ export async function getForecast(): Promise<ForecastResponse> {
 }
 export async function predict(input: PredictRequest): Promise<PredictResponse> {
   if (!isMockMode()) return request("/predict", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(input) });
-  await mockDelay(); return mock.prediction;
+  await mockDelay();
+  if (!("customer_id" in input)) throw new ApiError("Mock chỉ hỗ trợ chọn mã khách hàng.", 422);
+  const customer = (mock.customers as Customer[]).find((item) => item.customer_id === input.customer_id);
+  if (!customer) throw new ApiError(`Không tìm thấy khách hàng ${input.customer_id}`, 404);
+  if (input.snapshot_date !== customer.snapshot_date) throw new ApiError("Snapshot không khớp với dữ liệu mock.", 422);
+  if (customer.risk_score === null) throw new ApiError("Khách hàng này chưa đủ dữ liệu để dự đoán.", 422);
+  return { ...mock.prediction, score: customer.risk_score };
 }
 export async function getModelMetrics(): Promise<ModelMetricsResponse> {
   if (!isMockMode()) return request("/model/metrics");

@@ -25,7 +25,7 @@
     { "week_start": "2026-02-23", "views": 1, "carts": 0, "purchases": 0, "sessions": 1, "active_days": 1, "phase": "confirmation" }
   ],
   "statistics": { "groups": [], "estimates": [], "tests": [], "p_values": [], "cis": [], "assumptions": [], "dataset_notice": "Chưa có kết quả từ pipeline thống kê" },
-  "forecast": { "history": [], "predictions": [], "lower_ci": [], "upper_ci": [], "method": null, "mae": null, "rmse": null, "smape": null, "dataset_notice": "Chưa có kết quả dự báo" },
-  "prediction": { "score": 0.73, "risk_label": "high", "top_factors": [{ "feature": "sessions_4w", "contribution": 0.18 }], "model_version": "mock-v0", "dataset_notice": "DỰ ĐOÁN MOCK MINH HỌA" },
-  "metrics": { "models": [], "comparison": [], "confusion_matrix": null, "calibration": [], "dataset_notice": "Chưa có đánh giá trên tập kiểm thử" }
+  "forecast": { "history": [], "fitted": [], "predictions": [], "lower_ci": [], "upper_ci": [], "method": null, "mae": null, "rmse": null, "smape": null, "train_end": null, "unit": null, "series_length": null, "dataset_notice": "Chưa có kết quả dự báo" },
+  "prediction": { "score": 0.73, "risk_label": "mock", "top_factors": [], "model_version": "mock-v0", "dataset_notice": "DỰ ĐOÁN MOCK MINH HỌA — không phải kết quả mô hình" },
+  "metrics": { "models": [], "comparison": [], "evaluation_context": null, "confusion_matrix": null, "calibration": [], "dataset_notice": "Chưa có đánh giá trên tập kiểm thử" }
 }

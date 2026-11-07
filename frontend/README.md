@@ -14,15 +14,25 @@ Copy `.env.example` to `.env.local` (PowerShell: `Copy-Item .env.example .env.lo
 npm run dev
 ```
 
-Open <http://localhost:3000>. `/` redirects to `/dashboard`. `/customers` supports search, status filter, sorting, and pagination through URL query parameters. `/customers/{id}` shows a visitor's pre-snapshot features and a separate future confirmation timeline.
+Open <http://localhost:3000>. `/` redirects to `/dashboard`.
+
+| Route | Purpose |
+| --- | --- |
+| `/dashboard` | Overview and dataset notice |
+| `/customers` | Search, status filter, sort, and pagination through URL query parameters |
+| `/customers/{id}` | Pre-snapshot features and a separate retrospective confirmation timeline |
+| `/statistics` | Group distributions, estimates, and test results when available |
+| `/forecast` | Observed, fitted, and predicted time series when available |
+| `/predict` | Prediction form, model version, score, and available factors |
+| `/models` | Held-out metrics and calibration when available |
 
 ## Data mode
 
 - `NEXT_PUBLIC_API_MODE=mock` (default): local sample responses from `src/mocks/data.json`.
 - `NEXT_PUBLIC_API_MODE=real`: requests to `${NEXT_PUBLIC_API_URL}/api/*`. The backend must implement `docs/api_contract.md` at the repository root.
-- `NEXT_PUBLIC_MOCK_ERROR=1`: simulate an API failure for the dashboard error state.
+- `NEXT_PUBLIC_MOCK_ERROR=1`: simulate an API failure to check error states.
 
-The shared client is `src/lib/api.ts`; route components should call it instead of embedding sample values. The contract is a draft pending backend/data/AI review. No inferential statistics or model metrics have been produced yet.
+The shared client is `src/lib/api.ts`; route components call it instead of embedding sample values. In mock mode, C001 returns an **illustrative** prediction and C005 reports insufficient data. Statistics, forecast, and model metrics show empty states until reproducible results exist. The API contract is a draft pending backend, data, and AI review. See the repository root's `docs/runbook.md` for the real-backend switch and integration checks.
 
 ## Checks
 

@@ -8,7 +8,7 @@ The frontend runs with **illustrative mock data**. The dataset, cohort rules, la
 
 ## Run the frontend
 
-Requires Node.js and npm. From the repository root:
+Requires Node.js 24 and npm. From the repository root:
 
 ```bash
 cd frontend
@@ -26,8 +26,8 @@ On PowerShell, use `Copy-Item .env.example .env.local` instead of `cp` if needed
 - `data/`: data scripts, notebooks, and ignored raw/processed files.
 - `ai/`: planned model training and inference.
 - `research/`: statistics, regression, and forecasting work.
-- `docs/`: research scope, decisions, and API contract.
-- `reports/`: final report, paper, and slides.
+- `docs/`: research scope, decisions, literature map, evidence register, API contract, team handoff, runbook, and submission checks.
+- `reports/`: report draft and writing outlines for the paper and slides. No empirical findings are published yet.
 
 ## Working agreements
 

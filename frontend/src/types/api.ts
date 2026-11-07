@@ -67,9 +67,33 @@ export interface StatsResult {
   assumptions: string[];
 }
 
+export interface StatisticGroup {
+  name: string;
+  metric: string;
+  unit: string;
+  n: number;
+  mean: number | null;
+  median: number | null;
+  q1: number | null;
+  q3: number | null;
+  min: number | null;
+  max: number | null;
+  histogram: { lower: number; upper: number; count: number }[];
+}
+
+export interface StatisticEstimate {
+  name: string;
+  n: number;
+  estimate: number;
+  ci_low: number | null;
+  ci_high: number | null;
+  method: string;
+  unit: string;
+}
+
 export interface StatisticsResponse {
-  groups: unknown[];
-  estimates: unknown[];
+  groups: StatisticGroup[];
+  estimates: StatisticEstimate[];
   tests: StatsResult[];
   p_values: number[];
   cis: unknown[];
@@ -81,6 +105,7 @@ export interface SeriesPoint { date: string; value: number }
 
 export interface ForecastResponse {
   history: SeriesPoint[];
+  fitted?: SeriesPoint[];
   predictions: SeriesPoint[];
   lower_ci: SeriesPoint[];
   upper_ci: SeriesPoint[];
@@ -88,6 +113,9 @@ export interface ForecastResponse {
   mae: number | null;
   rmse: number | null;
   smape: number | null;
+  train_end?: string | null;
+  unit?: "day" | "week" | null;
+  series_length?: number | null;
   dataset_notice: string;
 }
 
@@ -104,9 +132,23 @@ export interface PredictResponse {
 }
 
 export interface ModelMetricsResponse {
-  models: unknown[];
+  models: {
+    name: string;
+    model_version: string;
+    split: string;
+    support: number;
+    prevalence: number;
+    threshold: number | null;
+    precision: number | null;
+    recall: number | null;
+    f1: number | null;
+    roc_auc: number | null;
+    pr_auc: number | null;
+    brier: number | null;
+  }[];
   comparison: unknown[];
+  evaluation_context: { model_version: string; split: string; threshold: number } | null;
   confusion_matrix: number[][] | null;
-  calibration: unknown[];
+  calibration: { mean_predicted: number; observed_rate: number; n: number }[];
   dataset_notice: string;
 }

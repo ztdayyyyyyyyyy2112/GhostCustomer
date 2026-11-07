@@ -1,4 +1,4 @@
-# API contract — draft v0.1
+# API contract — draft v0.2
 
 This is Thành's proposal for review by Long, Lâm, and Kiệt. Backend routes are prefixed with `/api`. Responses use JSON, snake_case keys, UTC ISO-8601 timestamps, and `null` when a value cannot be calculated. A score, when available, is a number in `[0, 1]`. `visitorid` is the source identifier; `customer_id` is its string form in the API. Do not expose future label inputs as prediction features.
 
@@ -46,13 +46,17 @@ Rates use `total_customers` as denominator in this draft; change only with an ex
 
 Each published test should include `name`, `hypothesis`, `n`, `statistic`, `p_value`, `effect_size`, `ci_low`, `ci_high`, `method`, and `assumptions`; nulls are allowed when inapplicable. The arrays stay empty before analysis, not populated with demo p-values.
 
+For charts and summary tables, each `groups[]` item proposes `name`, `metric`, `unit`, `n`, `mean`, `median`, `q1`, `q3`, `min`, `max`, and `histogram: [{lower, upper, count}]`. Each `estimates[]` item proposes `name`, `n`, `estimate`, `ci_low`, `ci_high`, `method`, and `unit`. All values must come from the same reproducible analysis. These shapes remain open for review by Lâm and Long.
+
 ### `GET /api/forecast`
 
 ```json
-{"history":[],"predictions":[],"lower_ci":[],"upper_ci":[],"method":null,"mae":null,"rmse":null,"smape":null,"dataset_notice":"Forecast unavailable until time-series analysis runs"}
+{"history":[],"fitted":[],"predictions":[],"lower_ci":[],"upper_ci":[],"method":null,"mae":null,"rmse":null,"smape":null,"train_end":null,"unit":null,"series_length":null,"dataset_notice":"Forecast unavailable until time-series analysis runs"}
 ```
 
-Each history/prediction point is `{ "date": "2026-02-16", "value": 0.2 }`. CI arrays have matching dates and lengths when present. Do not plot a forecast over an unsupported horizon.
+Each history/prediction point is `{ "date": "2026-02-16", "value": 0.2 }`. These values are ghost rates in `[0, 1]`; interval bounds should also stay within the valid rate range. CI arrays have matching dates and lengths when present. Do not plot a forecast over an unsupported horizon.
+
+`fitted[]` is optional and contains in-sample fitted values only. `train_end` marks the last training date; `unit` is `day` or `week`; `series_length` counts usable observations. The frontend draws observed, fitted, and future series separately without connecting unrelated periods.
 
 ### `POST /api/predict`
 
@@ -65,18 +69,22 @@ Request either `customer_id` with `snapshot_date`, or a validated `features` obj
 Response:
 
 ```json
-{"score":0.73,"risk_label":"high","top_factors":[{"feature":"sessions_4w","contribution":0.18}],"model_version":"mock-v0","dataset_notice":"ILLUSTRATIVE MOCK PREDICTION"}
+{"score":0.73,"risk_label":"mock","top_factors":[],"model_version":"mock-v0","dataset_notice":"ILLUSTRATIVE MOCK PREDICTION"}
 ```
 
 When no model is loaded, return HTTP 503 with `{"detail":"Prediction model unavailable"}`. `risk_label` threshold must come from validation data, not the test set.
 
+Mock mode uses the selected customer's illustrative `risk_score` for I/O demonstration and returns no fabricated SHAP factors. It returns 404 for an unknown ID and 422 for an unknown status or mismatched snapshot.
+
 ### `GET /api/model/metrics`
 
 ```json
-{"models":[],"comparison":[],"confusion_matrix":null,"calibration":[],"dataset_notice":"Metrics unavailable until held-out evaluation runs"}
+{"models":[],"comparison":[],"evaluation_context":null,"confusion_matrix":null,"calibration":[],"dataset_notice":"Metrics unavailable until held-out evaluation runs"}
 ```
 
 Every reported metric needs model version, split, support, class prevalence, and threshold where relevant. Do not fill empty arrays with fabricated scores.
+
+Each `models[]` row proposes `name`, `model_version`, `split`, `support`, `prevalence`, `threshold`, `precision`, `recall`, `f1`, `roc_auc`, `pr_auc`, and `brier`. Values that cannot be calculated are `null`. Each `calibration[]` bin proposes `mean_predicted`, `observed_rate`, and `n`. `confusion_matrix` is `[[TN, FP], [FN, TP]]`. When a matrix or calibration is present, `evaluation_context` must identify its `model_version`, `split`, and `threshold`; otherwise it is `null`. The frontend suppresses those sections without context to avoid attributing them to the wrong model or data split.
 
 ## Review questions
 
