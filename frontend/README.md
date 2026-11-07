@@ -14,7 +14,7 @@ Copy `.env.example` to `.env.local` (PowerShell: `Copy-Item .env.example .env.lo
 npm run dev
 ```
 
-Open <http://localhost:3000>. `/` redirects to `/dashboard`.
+Open <http://localhost:3000>. `/` redirects to `/dashboard`. `/customers` supports search, status filter, sorting, and pagination through URL query parameters. `/customers/{id}` shows a visitor's pre-snapshot features and a separate future confirmation timeline.
 
 ## Data mode
 

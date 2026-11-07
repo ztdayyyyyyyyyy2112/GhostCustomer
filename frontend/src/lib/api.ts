@@ -5,6 +5,13 @@ const mode = process.env.NEXT_PUBLIC_API_MODE ?? "mock";
 const baseUrl = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000").replace(/\/$/, "");
 export const isMockMode = () => mode !== "real";
 
+export class ApiError extends Error {
+  constructor(message: string, public readonly status: number) {
+    super(message);
+    this.name = "ApiError";
+  }
+}
+
 async function mockDelay() {
   await new Promise((resolve) => setTimeout(resolve, 250));
   if (process.env.NEXT_PUBLIC_MOCK_ERROR === "1") throw new Error("Lỗi mô phỏng để kiểm tra giao diện.");
@@ -15,7 +22,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   if (!response.ok) {
     const body: unknown = await response.json().catch(() => null);
     const detail = typeof body === "object" && body !== null && "detail" in body && typeof body.detail === "string" ? body.detail : `API trả về HTTP ${response.status}`;
-    throw new Error(detail);
+    throw new ApiError(detail, response.status);
   }
   return (await response.json()) as T;
 }
@@ -43,6 +50,7 @@ export async function getCustomers(query: CustomerQuery = {}): Promise<Customers
     const key = query.sort, direction = query.order === "asc" ? 1 : -1;
     items = [...items].sort((a, b) => {
       const left = a[key], right = b[key];
+      if (left === null && right === null) return 0;
       if (left === null) return 1;
       if (right === null) return -1;
       return left < right ? -direction : left > right ? direction : 0;
@@ -55,7 +63,7 @@ export async function getCustomer(id: string): Promise<CustomerDetailResponse> {
   if (!isMockMode()) return request(`/customers/${encodeURIComponent(id)}`);
   await mockDelay();
   const customer = (mock.customers as Customer[]).find((item) => item.customer_id === id);
-  if (!customer) throw new Error(`Không tìm thấy khách hàng ${id}`);
+  if (!customer) throw new ApiError(`Không tìm thấy khách hàng ${id}`, 404);
   return { customer, current_features: { sessions_4w: customer.sessions, views_4w: customer.views }, weekly_timeline: customer.customer_id === "C001" ? mock.weekly_timeline as CustomerDetailResponse["weekly_timeline"] : [], status: customer.status };
 }
 

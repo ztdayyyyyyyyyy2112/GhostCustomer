@@ -1,12 +1,13 @@
 import { KpiCard } from "@/components/KpiCard";
-import { getOverview, isMockMode } from "@/lib/api";
+import { AppHeader } from "@/components/AppHeader";
+import { getOverview } from "@/lib/api";
 
 const percent = (value: number | null) => value === null ? "Chưa đủ dữ liệu" : `${(value * 100).toFixed(1)}%`;
 
 export default async function DashboardPage() {
   const overview = await getOverview();
   return <main className="dashboard-shell">
-    <header className="dashboard-header"><div className="brand"><span className="brand-mark">G</span><span>GHOST CUSTOMER <small>STAT3013</small></span></div><span className="mode-badge">{isMockMode() ? "CHẾ ĐỘ MOCK" : "DỮ LIỆU API"}</span></header>
+    <AppHeader current="dashboard" />
     <div className="dashboard-content">
       <p className="eyebrow">TỔNG QUAN / OVERVIEW</p>
       <div className="title-row"><div><h1>Hành vi khách hàng</h1><p className="subtitle">Quan sát mức độ tương tác và trạng thái vận hành theo từng mốc dữ liệu.</p></div><div className="date-chip">{overview.date_range ? `${overview.date_range.start} → ${overview.date_range.end}` : "Chưa có khoảng thời gian"}</div></div>

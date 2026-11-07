@@ -21,7 +21,8 @@
   ],
   "weekly_timeline": [
     { "week_start": "2026-02-02", "views": 9, "carts": 2, "purchases": 1, "sessions": 4, "active_days": 3, "phase": "baseline" },
-    { "week_start": "2026-02-09", "views": 4, "carts": 0, "purchases": 0, "sessions": 2, "active_days": 2, "phase": "observation" }
+    { "week_start": "2026-02-09", "views": 4, "carts": 0, "purchases": 0, "sessions": 2, "active_days": 2, "phase": "observation" },
+    { "week_start": "2026-02-23", "views": 1, "carts": 0, "purchases": 0, "sessions": 1, "active_days": 1, "phase": "confirmation" }
   ],
   "statistics": { "groups": [], "estimates": [], "tests": [], "p_values": [], "cis": [], "assumptions": [], "dataset_notice": "Chưa có kết quả từ pipeline thống kê" },
   "forecast": { "history": [], "predictions": [], "lower_ci": [], "upper_ci": [], "method": null, "mae": null, "rmse": null, "smape": null, "dataset_notice": "Chưa có kết quả dự báo" },
