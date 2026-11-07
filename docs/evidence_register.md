@@ -4,6 +4,7 @@ Use one row per reproducible output. The owner adds a relative path or stable UR
 
 | ID | Evidence and intended use | Owner | Source path / command / input version | Review status |
 | --- | --- | --- | --- | --- |
+| E-00 | Exploratory Retailrocket source and window feasibility audit; not a Ghost-label result | Thành; Lâm reviews | `research/feasibility/retailrocket_audit.md` and matching script; `events.csv` SHA-256 in report | Preliminary — not approved for final claims |
 | E-01 | Dataset provenance, license, schema, raw hashes, coverage | Lâm | Pending dataset audit | Pending |
 | E-02 | Cohort flow and window/label sensitivity for D-02/D-03 | Lâm | Pending processed data | Pending |
 | E-03 | Descriptive group tables and figures for RQ1 | Lâm / Long | Pending statistical pipeline | Pending |
