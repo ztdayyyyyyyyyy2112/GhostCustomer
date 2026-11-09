@@ -34,6 +34,14 @@ Run backend unit and integration tests:
 python -m pytest backend/tests -v
 ```
 
+Check the status and shape of research handoff files without modifying them:
+
+```bash
+python scripts/check_integration_artifacts.py
+```
+
+Once all owners have delivered their outputs, add `--require-complete` to make missing files fail the check. This does not replace method and evidence review.
+
 Swagger API documentation is available at <http://localhost:8000/docs>. To connect the frontend in real mode, set `NEXT_PUBLIC_API_MODE=real` and `NEXT_PUBLIC_API_URL=http://localhost:8000` in `frontend/.env.local`.
 
 For a full-stack interface check before research outputs arrive, start the backend with `ENABLE_DEMO_FIXTURES=1` (PowerShell: `$env:ENABLE_DEMO_FIXTURES='1'`). Fixture responses are visibly marked as illustrative. Remove the variable and restart the backend for normal empty/unavailable behavior. Rebuild the frontend after changing `NEXT_PUBLIC_*` values for a production run.

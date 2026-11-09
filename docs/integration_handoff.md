@@ -27,8 +27,9 @@ Updated 9 November 2026. The frontend and FastAPI backend run together now. The 
 ## Recheck when each owner hands over work
 
 1. Record D-01–D-07 decisions and link E-01–E-10 evidence in `docs/evidence_register.md`. Compare output hashes and row counts with the owner's reproducible pipeline.
-2. From repo root, run `python -m pytest backend/tests -q`. From `frontend/`, run `npm run lint` and build with `NEXT_PUBLIC_API_MODE=real` plus `NEXT_PUBLIC_API_URL=http://localhost:8000`. Restart/rebuild after changing `NEXT_PUBLIC_*` values.
-3. Start `python -m uvicorn backend.app.main:app --port 8000` and the frontend on port 3000. Visit all seven routes in `docs/runbook.md`; check the browser console, CORS, 404/422/503 cases, nulls, date selection, and mobile layout.
-4. For each non-empty API section, compare a real response and a screenshot to the exact source artifact. Keep the model, report, paper, slides, and demo on the same cohort/window/label/version. Do not publish results from fixture mode.
+2. From repo root, run `python scripts/check_integration_artifacts.py` to see missing or malformed inputs. When all owners have delivered, run it with `--require-complete`; that mode must exit successfully before final demo. This is a structural check, not approval of scientific methods or model performance.
+3. From repo root, run `python -m pytest backend/tests -q`. From `frontend/`, run `npm run lint` and build with `NEXT_PUBLIC_API_MODE=real` plus `NEXT_PUBLIC_API_URL=http://localhost:8000`. Restart/rebuild after changing `NEXT_PUBLIC_*` values.
+4. Start `python -m uvicorn backend.app.main:app --port 8000` and the frontend on port 3000. Visit all seven routes in `docs/runbook.md`; check the browser console, CORS, 404/422/503 cases, nulls, date selection, and mobile layout.
+5. For each non-empty API section, compare a real response and a screenshot to the exact source artifact. Keep the model, report, paper, slides, and demo on the same cohort/window/label/version. Do not publish results from fixture mode.
 
 Current limits: no approved processed cohort, statistical/forecast result, saved evaluation, or real inference runtime is present. Frontend/backend wiring and empty-state behavior have been tested; scientific validity and actual model inference remain to be tested after those inputs arrive.

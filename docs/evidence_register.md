@@ -14,6 +14,6 @@ Use one row per reproducible output. The owner adds a relative path or stable UR
 | E-07 | Temporal split, leakage audit, model comparison and calibration for RQ3 | Kiệt | Pending model pipeline | Pending |
 | E-08 | Inference artifact/version and accepted API response examples | Kiệt / Long | Pending integration | Pending |
 | E-09 | Lecturer guidance and SEM feasibility decision for D-07 | Thành / Long | Pending clarification | Pending |
-| E-10 | Real-backend integration checks and demo evidence | Thành | `docs/integration_test.md`; pending backend | Pending |
+| E-10 | Real-backend integration checks and demo evidence | Thành | `docs/integration_test.md`; backend foundation and fixture/empty-state HTTP smoke verified, real artifacts pending | Pending real-data check |
 
 Before final submission, check that each table, figure, and numerical statement in all artifacts points to an approved evidence ID. Record any correction in a PR and update all affected artifacts together.
