@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from datetime import date
+
 from fastapi import APIRouter, HTTPException, Query
 from backend.app.schemas.api import (
     CustomerDetailResponse,
@@ -66,8 +68,11 @@ def get_customers(
     responses={404: {"model": ErrorResponse, "description": "Customer not found"}},
     summary="Get detailed history and pre-T features for a customer",
 )
-def get_customer(id: str) -> CustomerDetailResponse:
-    detail = get_customer_detail_data(id)
+def get_customer(
+    id: str,
+    snapshot_date: date | None = Query(None, description="ISO date of the selected visitor snapshot"),
+) -> CustomerDetailResponse:
+    detail = get_customer_detail_data(id, snapshot_date.isoformat() if snapshot_date else None)
     if not detail:
         raise HTTPException(status_code=404, detail=f"Không tìm thấy khách hàng {id}")
     return detail

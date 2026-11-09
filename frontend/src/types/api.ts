@@ -45,6 +45,7 @@ export interface CustomersResponse {
   page: number;
   page_size: number;
   total: number;
+  dataset_notice: string;
 }
 
 export interface CustomerDetailResponse {
@@ -52,6 +53,7 @@ export interface CustomerDetailResponse {
   current_features: Record<string, number | null>;
   weekly_timeline: CustomerWeekly[];
   status: CustomerStatus;
+  dataset_notice: string;
 }
 
 export interface StatsResult {

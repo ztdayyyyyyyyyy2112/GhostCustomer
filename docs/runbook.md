@@ -2,7 +2,7 @@
 
 ## Current state
 
-The Next.js frontend is runnable with illustrative mock data. The backend, processed dataset, statistical results, forecast, and trained inference artifact are still required from their owners. The full-report introduction and methods are a pre-data draft, not findings. Do not use mock scores or screens as evidence of model performance.
+The Next.js frontend and FastAPI backend can run together. The backend returns empty/unavailable states by default; `ENABLE_DEMO_FIXTURES=1` provides visibly labeled illustrative data. The approved processed dataset, statistical results, forecast, and real inference runtime are still required from their owners. The full-report introduction and methods are a pre-data draft, not findings. Do not use mock scores or screens as evidence of model performance.
 
 ## Start the frontend on a fresh machine
 
@@ -22,7 +22,7 @@ From `frontend/`, run `npm run lint` and `npm run build`. GitHub Actions runs bo
 ## Connect the real backend
 
 1. Agree on `docs/api_contract.md` with the data, backend, and AI owners. The current contract is a draft; record accepted schema changes in a PR.
-2. Start the backend using its own README once implemented. Confirm `/docs` and the seven `/api` endpoints.
+2. Start the backend using `backend/README.md`. Confirm `/docs` and the seven `/api` endpoints. Artifact paths and the model runtime interface are in `docs/integration_handoff.md`.
 3. In `frontend/.env.local`, set `NEXT_PUBLIC_API_MODE=real` and `NEXT_PUBLIC_API_URL=http://localhost:8000`. Restart the development server after changing `NEXT_PUBLIC_*` values. For a production deployment, set these values before `npm run build` and rebuild when they change because client-side public values are embedded in the bundle.
 4. Run the cases in `docs/integration_test.md`. Check the browser console, server logs, response shapes, 404/422/503 behavior, CORS, pagination, and null values.
 5. Compare every published metric, plot, model version, and sample count with the reproducible notebook or result file. Keep unavailable sections empty rather than substituting mock data.

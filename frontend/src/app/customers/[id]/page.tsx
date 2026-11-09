@@ -35,11 +35,13 @@ function Timeline({ rows, emptyText, maxViews }: { rows: CustomerWeekly[]; empty
   </div>)}</div>;
 }
 
-async function CustomerContent({ params }: { params: Promise<{ id: string }> }) {
+async function CustomerContent({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ snapshot_date?: string | string[] }> }) {
   const { id } = await params;
+  const rawDate = (await searchParams).snapshot_date;
+  const snapshotDate = Array.isArray(rawDate) ? rawDate[0] : rawDate;
   let detail;
   try {
-    detail = await getCustomer(id);
+    detail = await getCustomer(id, snapshotDate);
   } catch (error) {
     if (error instanceof ApiError && error.status === 404) notFound();
     throw error;
@@ -53,7 +55,7 @@ async function CustomerContent({ params }: { params: Promise<{ id: string }> }) 
   return <>
     <Link href="/customers" className="back-link">← Trở lại danh sách</Link>
     <div className="title-row detail-title"><div><p className="eyebrow">HỒ SƠ KHÁCH HÀNG</p><h1>{customer.customer_id}</h1><p className="subtitle">Snapshot tại mốc T: <time dateTime={customer.snapshot_date}>{customer.snapshot_date}</time>. Các đặc trưng dự đoán chỉ lấy từ sự kiện đến mốc này.</p></div><CustomerStatusBadge status={detail.status} /></div>
-    <DataNotice />
+    <DataNotice notice={detail.dataset_notice} />
 
     <section className="detail-summary" aria-label="Thông tin tại mốc T">
       <div><span>Trạng thái</span><strong><CustomerStatusBadge status={detail.status} /></strong></div>
@@ -73,6 +75,6 @@ async function CustomerContent({ params }: { params: Promise<{ id: string }> }) 
   </>;
 }
 
-export default function CustomerDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  return <main className="dashboard-shell"><AppHeader current="customers" /><div className="dashboard-content"><Suspense fallback={<div className="loading-bar" aria-label="Đang tải hồ sơ" />}><CustomerContent params={params} /></Suspense></div></main>;
+export default function CustomerDetailPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ snapshot_date?: string | string[] }> }) {
+  return <main className="dashboard-shell"><AppHeader current="customers" /><div className="dashboard-content"><Suspense fallback={<div className="loading-bar" aria-label="Đang tải hồ sơ" />}><CustomerContent params={params} searchParams={searchParams} /></Suspense></div></main>;
 }

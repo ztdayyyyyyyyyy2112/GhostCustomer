@@ -74,7 +74,7 @@ async function CustomersContent({ searchParams }: { searchParams: Promise<RawPar
         </div>
         <span className="date-chip">{result.total.toLocaleString("vi-VN")} kết quả</span>
       </div>
-      <DataNotice />
+      <DataNotice notice={result.dataset_notice} />
       <form className="filter-panel" action="/customers" method="get" aria-label="Tìm kiếm và lọc khách hàng">
         <label className="filter-field filter-search">
           Mã khách hàng
@@ -165,7 +165,7 @@ async function CustomersContent({ searchParams }: { searchParams: Promise<RawPar
                     <td>
                       <Link
                         className="row-link"
-                        href={`/customers/${encodeURIComponent(customer.customer_id)}`}
+                        href={`/customers/${encodeURIComponent(customer.customer_id)}?snapshot_date=${encodeURIComponent(customer.snapshot_date)}`}
                         aria-label={`Xem chi tiết khách hàng ${customer.customer_id}`}
                       >
                         Xem chi tiết<span aria-hidden="true"> →</span>

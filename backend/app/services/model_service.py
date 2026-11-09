@@ -1,9 +1,12 @@
 from __future__ import annotations
 
 import json
+from importlib import import_module
 from typing import Any
 from fastapi import HTTPException
+from pydantic import ValidationError
 from backend.app.config import settings
+from backend.app.services.artifacts import load_json_artifact
 from backend.app.schemas.api import (
     ModelMetricsResponse,
     PredictRequest,
@@ -22,13 +25,28 @@ def _load_fixtures() -> dict[str, Any] | None:
     return None
 
 
-def run_predict(request: PredictRequest) -> PredictResponse:
-    # 1. Check for real model artifact
-    model_artifact = settings.MODELS_DIR / "model.pkl"
-    has_real_model = model_artifact.exists()
+def _run_real_predict(request: PredictRequest) -> PredictResponse | None:
+    runtime_path = settings.MODELS_DIR.parent / "inference" / "runtime.py"
+    if not runtime_path.exists():
+        return None
+    try:
+        runtime = import_module("ai.inference.runtime")
+        prediction = runtime.predict(request.model_dump(exclude_none=True))
+        return PredictResponse.model_validate(prediction)
+    except LookupError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except ValueError as exc:
+        if isinstance(exc, ValidationError):
+            raise HTTPException(status_code=503, detail="Model response does not match API contract") from exc
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    except Exception as exc:
+        raise HTTPException(status_code=503, detail="Prediction model unavailable") from exc
 
-    if not has_real_model and not settings.ENABLE_DEMO_FIXTURES:
-        raise HTTPException(status_code=503, detail="Prediction model unavailable")
+
+def run_predict(request: PredictRequest) -> PredictResponse:
+    real_prediction = _run_real_predict(request)
+    if real_prediction is not None:
+        return real_prediction
 
     # If in demo fixture mode (or mock demonstration):
     if settings.ENABLE_DEMO_FIXTURES:
@@ -62,20 +80,16 @@ def run_predict(request: PredictRequest) -> PredictResponse:
                 dataset_notice="DỰ ĐOÁN MOCK MINH HỌA — không phải kết quả mô hình",
             )
 
-    # When real model is integrated in future:
+    # No installed inference runtime or illustrative fixture.
     raise HTTPException(status_code=503, detail="Prediction model unavailable")
 
 
 def get_model_metrics_data() -> ModelMetricsResponse:
     # 1. Check for real evaluation metrics artifact
-    metrics_file = PROJECT_ROOT_EVAL = settings.RESEARCH_DIR.parent / "ai" / "evaluation" / "metrics.json"
-    if metrics_file.exists():
-        try:
-            with open(metrics_file, "r", encoding="utf-8") as f:
-                data = json.load(f)
-                return ModelMetricsResponse(**data)
-        except Exception:
-            pass
+    metrics_file = settings.MODELS_DIR.parent / "evaluation" / "metrics.json"
+    metrics = load_json_artifact(metrics_file, ModelMetricsResponse, "Model metrics")
+    if metrics is not None:
+        return metrics
 
     # 2. Check for demo fixtures if enabled
     if settings.ENABLE_DEMO_FIXTURES:

@@ -1,8 +1,8 @@
-# API contract — draft v0.2
+# API contract — draft v0.3
 
 This is Thành's proposal for review by Long, Lâm, and Kiệt. Backend routes are prefixed with `/api`. Responses use JSON, snake_case keys, UTC ISO-8601 timestamps, and `null` when a value cannot be calculated. A score, when available, is a number in `[0, 1]`. `visitorid` is the source identifier; `customer_id` is its string form in the API. Do not expose future label inputs as prediction features.
 
-The frontend reads `NEXT_PUBLIC_API_MODE=mock|real` and `NEXT_PUBLIC_API_URL`. Mock responses are illustrative and must never be cited as analysis. Live statistical endpoints should return empty results or nulls until reproducible output files exist.
+The frontend reads `NEXT_PUBLIC_API_MODE=mock|real` and `NEXT_PUBLIC_API_URL`. Mock responses are illustrative and must never be cited as analysis. Live statistical endpoints should return empty results or nulls until reproducible output files exist. The customers list and detail responses include `dataset_notice`, so fixture data remains visibly labeled even when served by the real backend.
 
 ## Shared objects
 
@@ -27,13 +27,15 @@ Rates use `total_customers` as denominator in this draft; change only with an ex
 `page` is one-based; `page_size` is 1–100. `status` and `search` are optional. Allowed sort keys: `snapshot_date`, `sessions`, `views`, `decay`, `risk_score`.
 
 ```json
-{"items":[{"customer_id":"C001","snapshot_date":"2026-02-16","status":"ghost","sessions":2,"views":4,"decay":0.65,"risk_score":0.73}],"page":1,"page_size":20,"total":1}
+{"items":[{"customer_id":"C001","snapshot_date":"2026-02-16","status":"ghost","sessions":2,"views":4,"decay":0.65,"risk_score":0.73}],"page":1,"page_size":20,"total":1,"dataset_notice":"ILLUSTRATIVE MOCK DATA — not research findings"}
 ```
 
 ### `GET /api/customers/{id}`
 
+Pass `snapshot_date=YYYY-MM-DD` when opening a row from the customer list. One visitor may have multiple dated snapshots; the response must match both `customer_id` and `snapshot_date`. Without the query parameter, the API returns that visitor's latest available snapshot. An unknown ID or unavailable date returns 404; an invalid date returns 422.
+
 ```json
-{"customer":{"customer_id":"C001","snapshot_date":"2026-02-16","status":"ghost","sessions":2,"views":4,"decay":0.65,"risk_score":0.73},"current_features":{"sessions_4w":2,"views_4w":4,"days_since_last_view":6},"weekly_timeline":[{"week_start":"2026-02-09","views":4,"carts":0,"purchases":0,"sessions":2,"active_days":2,"phase":"observation"}],"status":"ghost"}
+{"customer":{"customer_id":"C001","snapshot_date":"2026-02-16","status":"ghost","sessions":2,"views":4,"decay":0.65,"risk_score":0.73},"current_features":{"sessions_4w":2,"views_4w":4,"days_since_last_view":6},"weekly_timeline":[{"week_start":"2026-02-09","views":4,"carts":0,"purchases":0,"sessions":2,"active_days":2,"phase":"observation"}],"status":"ghost","dataset_notice":"ILLUSTRATIVE MOCK DATA — not research findings"}
 ```
 
 `current_features` contains only data at or before `snapshot_date`. The `confirmation` timeline, if shown for retrospective explanation, is never submitted to prediction.
@@ -60,7 +62,7 @@ Each history/prediction point is `{ "date": "2026-02-16", "value": 0.2 }`. These
 
 ### `POST /api/predict`
 
-Request either `customer_id` with `snapshot_date`, or a validated `features` object (pre-T fields only):
+Request exactly one of `customer_id` with `snapshot_date`, or a non-empty validated `features` object (pre-T fields only). Extra top-level fields are rejected. The approved feature allowlist and preprocessing version still need to be supplied by Kiệt:
 
 ```json
 {"customer_id":"C001","snapshot_date":"2026-02-16"}
@@ -73,6 +75,8 @@ Response:
 ```
 
 When no model is loaded, return HTTP 503 with `{"detail":"Prediction model unavailable"}`. `risk_label` threshold must come from validation data, not the test set.
+
+For a real model, `ai/inference/runtime.py` exports `predict(payload: dict) -> dict`; the backend validates the return value as `PredictResponse`, including `score` in `[0, 1]`. The runtime owns model loading and pre-T feature derivation. A saved `model.pkl` without this runtime does not enable inference. See `docs/integration_handoff.md`.
 
 Mock mode uses the selected customer's illustrative `risk_score` for I/O demonstration and returns no fabricated SHAP factors. It returns 404 for an unknown ID and 422 for an unknown status or mismatched snapshot.
 

@@ -1,6 +1,6 @@
 # GhostCustomer Backend API
 
-FastAPI application implementing the 7 contract routes defined in [`docs/api_contract.md`](../docs/api_contract.md) (v0.2).
+FastAPI application implementing the 7 contract routes defined in [`docs/api_contract.md`](../docs/api_contract.md) (draft v0.3).
 
 ## Features
 
@@ -8,6 +8,7 @@ FastAPI application implementing the 7 contract routes defined in [`docs/api_con
 - **CORS enabled**: Pre-configured for `http://localhost:3000` (configurable via `CORS_ORIGINS` environment variable).
 - **Research integrity**: In default mode, pending analyses return standardized empty structures, nulls, and explicit notices (`dataset_notice`). If no model artifact exists, `POST /api/predict` returns HTTP 503 (`Prediction model unavailable`). No fabricated scores or p-values are produced.
 - **Fixture mode for integration testing**: Setting `ENABLE_DEMO_FIXTURES=1` enables illustrative contract demonstration fixtures to verify full frontend-backend integration before reproducible model weights are trained.
+- **Inference seam**: `ai/inference/runtime.py` may provide a `predict(payload: dict) -> dict` function. The backend validates its result against the API schema; without this runtime, prediction returns 503 in normal mode.
 
 ## Setup and Installation
 

@@ -4,7 +4,7 @@ STAT3013 project: early detection of silent customer disengagement in e-commerce
 
 ## Current status
 
-The frontend runs with **illustrative mock data** or connected to the FastAPI backend. The dataset, cohort rules, label thresholds, statistical estimates, and trained model are not finalized. Do not present mock values as research results.
+The frontend runs with **illustrative mock data** or connected to the FastAPI backend. The dataset, cohort rules, label thresholds, statistical estimates, and trained model are not finalized. The real-data file and inference interface is documented in `docs/integration_handoff.md`. Do not present mock values as research results.
 
 ## Run the frontend
 
@@ -35,6 +35,8 @@ python -m pytest backend/tests -v
 ```
 
 Swagger API documentation is available at <http://localhost:8000/docs>. To connect the frontend in real mode, set `NEXT_PUBLIC_API_MODE=real` and `NEXT_PUBLIC_API_URL=http://localhost:8000` in `frontend/.env.local`.
+
+For a full-stack interface check before research outputs arrive, start the backend with `ENABLE_DEMO_FIXTURES=1` (PowerShell: `$env:ENABLE_DEMO_FIXTURES='1'`). Fixture responses are visibly marked as illustrative. Remove the variable and restart the backend for normal empty/unavailable behavior. Rebuild the frontend after changing `NEXT_PUBLIC_*` values for a production run.
 
 ## Repository layout
 
