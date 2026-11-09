@@ -2,6 +2,8 @@
 
 Next.js 16 and TypeScript dashboard for the STAT3013 project. The current Overview uses **illustrative mock data**, not study findings.
 
+The interface uses self-hosted Roboto with Latin and Vietnamese glyphs through `next/font/google`.
+
 ## Setup
 
 ```bash
