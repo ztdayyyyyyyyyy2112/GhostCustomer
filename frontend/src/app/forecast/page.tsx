@@ -12,7 +12,7 @@ export default async function ForecastPage() {
   return <main className="dashboard-shell"><AppHeader current="forecast" /><div className="dashboard-content">
     <p className="eyebrow">DỰ BÁO / FORECASTING</p>
     <div className="title-row"><div><h1>Dự báo tỷ lệ Ghost</h1><p className="subtitle">Phân biệt tỷ lệ quan sát, giá trị fitted và dự báo tương lai theo thời gian.</p></div></div>
-    <DataNotice />
+    <DataNotice notice={forecast.dataset_notice} />
     {!hasSeries ? <section className="empty-panel"><h2>Chưa có chuỗi dự báo</h2><p>{forecast.dataset_notice}</p><p>Chỉ những tuần có đủ nhãn tương lai mới được dùng để tính tỷ lệ. Cần so sánh với baseline trước khi công bố ARIMA.</p></section> : <>
       <section className="analytics-section"><div className="section-heading"><div><p className="section-kicker">CHUỖI THỜI GIAN</p><h2>Quan sát và dự báo</h2></div><span>{forecast.unit === "week" ? "Theo tuần" : forecast.unit === "day" ? "Theo ngày" : "Chưa xác định đơn vị"} · {forecast.series_length ?? forecast.history.length} điểm quan sát</span></div><ForecastChart forecast={forecast} /><p className="source-note">{forecast.dataset_notice}</p></section>
       <section className="forecast-metrics" aria-label="Đánh giá mô hình dự báo"><div><span>Phương pháp</span><strong>{forecast.method ?? "Chưa công bố"}</strong></div><div><span>MAE</span><strong>{metric(forecast.mae)}</strong></div><div><span>RMSE</span><strong>{metric(forecast.rmse)}</strong></div><div><span>sMAPE</span><strong>{metric(forecast.smape)}</strong></div></section>

@@ -4,6 +4,7 @@ import json
 from typing import Any
 from backend.app.config import settings
 from backend.app.schemas.api import StatisticsResponse
+from backend.app.services.artifacts import load_json_artifact
 
 
 def _load_fixtures() -> dict[str, Any] | None:
@@ -19,13 +20,9 @@ def _load_fixtures() -> dict[str, Any] | None:
 def get_statistics_data() -> StatisticsResponse:
     # 1. Check for real statistical results file
     stats_file = settings.RESEARCH_DIR / "statistics" / "results.json"
-    if stats_file.exists():
-        try:
-            with open(stats_file, "r", encoding="utf-8") as f:
-                data = json.load(f)
-                return StatisticsResponse(**data)
-        except Exception:
-            pass
+    stats = load_json_artifact(stats_file, StatisticsResponse, "Statistics")
+    if stats is not None:
+        return stats
 
     # 2. Check for demo fixtures if enabled
     if settings.ENABLE_DEMO_FIXTURES:

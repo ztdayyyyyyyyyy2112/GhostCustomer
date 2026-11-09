@@ -4,6 +4,7 @@ import json
 from typing import Any
 from backend.app.config import settings
 from backend.app.schemas.api import ForecastResponse
+from backend.app.services.artifacts import load_json_artifact
 
 
 def _load_fixtures() -> dict[str, Any] | None:
@@ -19,13 +20,9 @@ def _load_fixtures() -> dict[str, Any] | None:
 def get_forecast_data() -> ForecastResponse:
     # 1. Check for real forecast artifact
     forecast_file = settings.RESEARCH_DIR / "forecasting" / "results.json"
-    if forecast_file.exists():
-        try:
-            with open(forecast_file, "r", encoding="utf-8") as f:
-                data = json.load(f)
-                return ForecastResponse(**data)
-        except Exception:
-            pass
+    forecast = load_json_artifact(forecast_file, ForecastResponse, "Forecast")
+    if forecast is not None:
+        return forecast
 
     # 2. Check for demo fixtures if enabled
     if settings.ENABLE_DEMO_FIXTURES:

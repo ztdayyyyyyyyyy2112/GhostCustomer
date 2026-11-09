@@ -56,15 +56,17 @@ export async function getCustomers(query: CustomerQuery = {}): Promise<Customers
       return left < right ? -direction : left > right ? direction : 0;
     });
   }
-  return { items: items.slice((page - 1) * size, page * size), page, page_size: size, total: items.length };
+  return { items: items.slice((page - 1) * size, page * size), page, page_size: size, total: items.length, dataset_notice: mock.overview.dataset_notice };
 }
 
-export async function getCustomer(id: string): Promise<CustomerDetailResponse> {
-  if (!isMockMode()) return request(`/customers/${encodeURIComponent(id)}`);
+export async function getCustomer(id: string, snapshotDate?: string): Promise<CustomerDetailResponse> {
+  const query = snapshotDate ? `?snapshot_date=${encodeURIComponent(snapshotDate)}` : "";
+  if (!isMockMode()) return request(`/customers/${encodeURIComponent(id)}${query}`);
   await mockDelay();
-  const customer = (mock.customers as Customer[]).find((item) => item.customer_id === id);
+  const matches = (mock.customers as Customer[]).filter((item) => item.customer_id === id && (!snapshotDate || item.snapshot_date === snapshotDate));
+  const customer = matches.sort((a, b) => b.snapshot_date.localeCompare(a.snapshot_date))[0];
   if (!customer) throw new ApiError(`Không tìm thấy khách hàng ${id}`, 404);
-  return { customer, current_features: { sessions_4w: customer.sessions, views_4w: customer.views }, weekly_timeline: customer.customer_id === "C001" ? mock.weekly_timeline as CustomerDetailResponse["weekly_timeline"] : [], status: customer.status };
+  return { customer, current_features: { sessions_4w: customer.sessions, views_4w: customer.views }, weekly_timeline: customer.customer_id === "C001" ? mock.weekly_timeline as CustomerDetailResponse["weekly_timeline"] : [], status: customer.status, dataset_notice: mock.overview.dataset_notice };
 }
 
 export async function getStatistics(): Promise<StatisticsResponse> {

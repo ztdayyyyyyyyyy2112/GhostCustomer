@@ -9,7 +9,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 class Settings:
     API_TITLE: str = "GhostCustomer API"
-    API_VERSION: str = "0.2.0"
+    API_VERSION: str = "0.3.0"
     API_PREFIX: str = "/api"
 
     CORS_ORIGINS: list[str] = [

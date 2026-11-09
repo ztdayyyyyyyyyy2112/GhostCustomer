@@ -1,7 +1,8 @@
 from __future__ import annotations
 
+from datetime import date
 from typing import Any, Literal
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 CustomerStatus = Literal["active", "ghost", "candidate", "recovered", "inactive", "unknown"]
@@ -55,6 +56,7 @@ class CustomersResponse(BaseModel):
     page: int
     page_size: int
     total: int
+    dataset_notice: str
 
 
 class CustomerDetailResponse(BaseModel):
@@ -62,6 +64,7 @@ class CustomerDetailResponse(BaseModel):
     current_features: dict[str, float | int | None]
     weekly_timeline: list[CustomerWeekly]
     status: CustomerStatus
+    dataset_notice: str
 
 
 class StatsResult(BaseModel):
@@ -139,16 +142,27 @@ class ForecastResponse(BaseModel):
 
 
 class PredictRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     customer_id: str | None = None
     snapshot_date: str | None = None
     features: dict[str, float | int | None] | None = None
 
     @model_validator(mode="after")
     def validate_request_shape(self) -> PredictRequest:
-        has_id = bool(self.customer_id and self.snapshot_date)
-        has_features = self.features is not None
-        if not (has_id or has_features):
-            raise ValueError("Request must provide either 'customer_id' with 'snapshot_date', or a 'features' dictionary.")
+        if self.features is not None:
+            valid = not self.customer_id and not self.snapshot_date and bool(self.features)
+        else:
+            valid = bool(self.customer_id and self.snapshot_date)
+        if not valid:
+            raise ValueError("Provide exactly one of 'customer_id' with 'snapshot_date', or a non-empty 'features' dictionary.")
+        if self.snapshot_date:
+            try:
+                valid_date = date.fromisoformat(self.snapshot_date)
+            except ValueError as exc:
+                raise ValueError("snapshot_date must be a valid ISO date (YYYY-MM-DD).") from exc
+            if valid_date.isoformat() != self.snapshot_date:
+                raise ValueError("snapshot_date must be a valid ISO date (YYYY-MM-DD).")
         return self
 
 
@@ -158,7 +172,7 @@ class FeatureContribution(BaseModel):
 
 
 class PredictResponse(BaseModel):
-    score: float
+    score: float = Field(ge=0, le=1)
     risk_label: str
     top_factors: list[FeatureContribution] = Field(default_factory=list)
     model_version: str

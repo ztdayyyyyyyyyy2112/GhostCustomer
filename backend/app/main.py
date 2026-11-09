@@ -11,7 +11,7 @@ from backend.app.config import settings
 app = FastAPI(
     title=settings.API_TITLE,
     version=settings.API_VERSION,
-    description="GhostCustomer Research and Operational API (Draft v0.2)",
+    description="GhostCustomer Research and Operational API (Draft v0.3)",
     docs_url="/docs",
     redoc_url="/redoc",
 )
