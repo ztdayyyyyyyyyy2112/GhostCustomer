@@ -1,1 +1,0 @@
-"""GhostCustomer Backend Application."""
