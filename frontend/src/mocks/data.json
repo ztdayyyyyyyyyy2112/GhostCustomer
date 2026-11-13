@@ -1,0 +1,31 @@
+{
+  "overview": {
+    "total_customers": 5,
+    "active_count": 2,
+    "ghost_count": 1,
+    "candidate_count": 1,
+    "unknown_count": 1,
+    "inactive_count": 0,
+    "recovered_count": 0,
+    "active_rate": 0.4,
+    "ghost_rate": 0.2,
+    "date_range": { "start": "2026-01-05", "end": "2026-02-16" },
+    "dataset_notice": "DỮ LIỆU MOCK MINH HỌA — không phải kết quả nghiên cứu"
+  },
+  "customers": [
+    { "customer_id": "C001", "snapshot_date": "2026-02-16", "status": "ghost", "sessions": 2, "views": 4, "decay": 0.65, "risk_score": 0.73 },
+    { "customer_id": "C002", "snapshot_date": "2026-02-16", "status": "active", "sessions": 8, "views": 24, "decay": 0.03, "risk_score": 0.12 },
+    { "customer_id": "C003", "snapshot_date": "2026-02-16", "status": "active", "sessions": 6, "views": 17, "decay": 0.1, "risk_score": 0.2 },
+    { "customer_id": "C004", "snapshot_date": "2026-02-16", "status": "candidate", "sessions": 3, "views": 8, "decay": 0.42, "risk_score": 0.57 },
+    { "customer_id": "C005", "snapshot_date": "2026-02-16", "status": "unknown", "sessions": null, "views": null, "decay": null, "risk_score": null }
+  ],
+  "weekly_timeline": [
+    { "week_start": "2026-02-02", "views": 9, "carts": 2, "purchases": 1, "sessions": 4, "active_days": 3, "phase": "baseline" },
+    { "week_start": "2026-02-09", "views": 4, "carts": 0, "purchases": 0, "sessions": 2, "active_days": 2, "phase": "observation" },
+    { "week_start": "2026-02-23", "views": 1, "carts": 0, "purchases": 0, "sessions": 1, "active_days": 1, "phase": "confirmation" }
+  ],
+  "statistics": { "groups": [], "estimates": [], "tests": [], "p_values": [], "cis": [], "assumptions": [], "dataset_notice": "Chưa có kết quả từ pipeline thống kê" },
+  "forecast": { "history": [], "fitted": [], "predictions": [], "lower_ci": [], "upper_ci": [], "method": null, "mae": null, "rmse": null, "smape": null, "train_end": null, "unit": null, "series_length": null, "dataset_notice": "Chưa có kết quả dự báo" },
+  "prediction": { "score": 0.73, "risk_label": "mock", "top_factors": [], "model_version": "mock-v0", "dataset_notice": "DỰ ĐOÁN MOCK MINH HỌA — không phải kết quả mô hình" },
+  "metrics": { "models": [], "comparison": [], "evaluation_context": null, "confusion_matrix": null, "calibration": [], "dataset_notice": "Chưa có đánh giá trên tập kiểm thử" }
+}
