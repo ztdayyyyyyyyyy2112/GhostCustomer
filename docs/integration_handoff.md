@@ -1,6 +1,6 @@
 # Real-data integration handoff (draft v0.4)
 
-Updated 14 November 2026. The frontend and FastAPI backend run together. Lâm's proposed Retailrocket `overview.json`, `customers.json`, customer detail files, and descriptive `research/statistics/results.json` are now generated locally under `data/processed/` (statistics also has a small reviewed-shape JSON in Git). Outputs remain preliminary pending owner review; this handoff does not approve the cohort or label.
+Updated 15 November 2026. The frontend and FastAPI backend run together. Lâm's proposed Retailrocket `overview.json`, `customers.json`, and customer detail files are generated locally under `data/processed/`; Long's E-03 `research/statistics/results.json` contains descriptive group summaries including sample SD and missingness, with Lâm reviewing the data/cohort inputs. Raw and customer-level processed outputs remain local; the aggregate E-03 JSON is tracked for the API contract. All outputs remain preliminary: D-01–D-04 are still open; the conversation assumption was only for checking remaining work.
 
 ## Artifact locations and owners
 
@@ -9,7 +9,7 @@ Updated 14 November 2026. The frontend and FastAPI backend run together. Lâm's 
 | Lâm | `data/processed/overview.json` | `/api/overview`; exact `OverviewResponse` shape in `docs/api_contract.md`, with counts/rates based on the approved cohort and a source notice. |
 | Lâm | `data/processed/customers.json` | `/api/customers`; JSON array of `Customer` rows, one per `(customer_id, snapshot_date)`. Keep duplicate visitor IDs across dates; do not duplicate the same pair. Dates are ISO `YYYY-MM-DD`. |
 | Lâm | `data/processed/customer_details/YYYY-MM-DD/<sha256(customer_id UTF-8)>.json` | `/api/customers/{id}?snapshot_date=YYYY-MM-DD`; each file is a complete `CustomerDetailResponse`, including matching `customer`, `status`, `current_features`, `weekly_timeline`, and `dataset_notice`. The filename is the lowercase 64-character SHA-256 hex digest of the UTF-8 customer ID. |
-| Long | `research/statistics/results.json` | `/api/statistics`; `StatisticsResponse` shape, with N, method, assumptions, CIs and effect sizes tied to E-03/E-04/E-05. |
+| Long (Lâm reviews data/cohort) | `research/statistics/results.json` | `/api/statistics`; `StatisticGroup` includes observed `n`, `n_total`, `missing_n`, `missing_rate`, sample `sd`, and descriptive distributions for E-03; inferential CIs/effect sizes belong to E-04/E-05. |
 | Long | `research/forecasting/results.json` | `/api/forecast`; `ForecastResponse` shape, dated observed/fitted/future points and holdout errors tied to E-06. |
 | Kiệt | `ai/evaluation/metrics.json` | `/api/model/metrics`; `ModelMetricsResponse` shape, evaluation context, class support, prevalence, threshold, confusion matrix and calibration tied to E-07. |
 | Kiệt + Long | `ai/inference/runtime.py` and model artifacts outside Git | `/api/predict`; export `predict(payload: dict) -> dict`. The backend passes exactly one of `{customer_id, snapshot_date}` or `{features}` and validates the returned dictionary as `PredictResponse`. See behavior below. |

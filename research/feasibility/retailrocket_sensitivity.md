@@ -1,12 +1,11 @@
-# Legacy Retailrocket O-to-C snapshot sensitivity
+# Retailrocket snapshot and label sensitivity
 
-> **Legacy exploratory output.** The label below compares O to C and does not implement the current proposed baseline-to-confirmation label in `data/scripts/labels.py`. Use the newer E-02 summaries in ignored `data/processed/cohort_flow.json` and `data/processed/sensitivity.json` for the current baseline-relative label. Do not cite the Ghost counts in this legacy file as current label results.
-
-Generated: 2026-11-14T03:05:59.603Z
+Generated: 2026-11-14T22:59:25.630Z
 
 ## Source check
 
 - File: `data/raw/events.csv`; 2,756,101 rows; 1,407,580 visitor IDs; SHA-256 `3745aa83238b1e6d44d8fda209807899f420084398f94ddf745f3cbcfecbf9e7`.
+- Eligibility sensitivity values read from `data/config/pipeline.json`: history events 5, 10; active weeks 2, 3.
 - Event counts: view 2,664,312 (96.7%), addtocart 69,332 (2.5%), transaction 22,457 (0.8%).
 - Date range: 2015-05-03T03:00:04.384Z to 2015-09-18T02:59:47.788Z; 19 complete Monday weeks from 2015-05-04 through 2015-09-14 (end exclusive).
 - Raw duplicate rows are retained, matching the earlier audit; no item properties/category tree are needed for these event-count labels.

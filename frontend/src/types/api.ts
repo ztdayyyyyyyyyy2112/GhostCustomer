@@ -74,7 +74,11 @@ export interface StatisticGroup {
   metric: string;
   unit: string;
   n: number;
+  n_total: number;
+  missing_n: number;
+  missing_rate: number;
   mean: number | null;
+  sd: number | null;
   median: number | null;
   q1: number | null;
   q3: number | null;

@@ -7,6 +7,7 @@ import platform
 from datetime import datetime, timezone
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 from data.scripts.aggregate import aggregate_user_week
@@ -34,6 +35,39 @@ def _json_default(value):
     if pd.isna(value):
         return None
     raise TypeError(f"cannot serialize {type(value).__name__}")
+
+
+def descriptive_groups(complete: pd.DataFrame, metrics: list[str]) -> list[dict]:
+    groups = []
+    for status, frame in complete.groupby("label_status", sort=True):
+        for metric in metrics:
+            values = pd.to_numeric(frame[metric], errors="coerce")
+            observed = values.dropna()
+            n = len(observed)
+            total = len(frame)
+            if n:
+                hist, edges = np.histogram(observed, bins=10)
+                histogram = [{"lower": float(edges[i]), "upper": float(edges[i + 1]), "count": int(hist[i])} for i in range(len(hist))]
+            else:
+                histogram = []
+            groups.append({
+                "name": str(status),
+                "metric": metric,
+                "unit": "ratio" if "ratio" in metric else "days" if "recency" in metric else "count",
+                "n": n,
+                "n_total": total,
+                "missing_n": total - n,
+                "missing_rate": (total - n) / total if total else None,
+                "mean": float(observed.mean()) if n else None,
+                "sd": float(observed.std(ddof=1)) if n > 1 else None,
+                "median": float(observed.median()) if n else None,
+                "q1": float(observed.quantile(.25)) if n else None,
+                "q3": float(observed.quantile(.75)) if n else None,
+                "min": float(observed.min()) if n else None,
+                "max": float(observed.max()) if n else None,
+                "histogram": histogram,
+            })
+    return groups
 
 
 def main() -> int:
@@ -93,14 +127,8 @@ def main() -> int:
 
     # E-03 is descriptive only; repeated snapshots are retained and their dependence is disclosed.
     complete = merged.loc[merged.horizon_mature & merged.label_status.ne("unknown")]
-    metrics = ["feature_sessions_4w", "feature_views_4w", "feature_carts_4w", "feature_purchases_4w", "feature_active_days_4w", "feature_decay_ratio"]
-    groups = []
-    for status, frame in complete.groupby("label_status", sort=True):
-        for metric in metrics:
-            values = pd.to_numeric(frame[metric], errors="coerce").dropna()
-            if values.empty: continue
-            hist, edges = __import__("numpy").histogram(values, bins=10)
-            groups.append({"name": str(status), "metric": metric, "unit": "count" if "sessions" in metric or "views" in metric or "carts" in metric or "purchases" in metric or "days" in metric else "ratio", "n": int(len(values)), "mean": float(values.mean()), "median": float(values.median()), "q1": float(values.quantile(.25)), "q3": float(values.quantile(.75)), "min": float(values.min()), "max": float(values.max()), "histogram": [{"lower": float(edges[i]), "upper": float(edges[i+1]), "count": int(hist[i])} for i in range(len(hist))]})
+    metrics = ["feature_sessions_4w", "feature_views_4w", "feature_carts_4w", "feature_purchases_4w", "feature_active_days_4w", "feature_recency_days", "feature_decay_ratio"]
+    groups = descriptive_groups(complete, metrics)
     eda = {"groups": groups, "estimates": [], "tests": [], "p_values": [], "cis": [], "assumptions": ["Descriptive statistics only; no hypothesis tests or confidence intervals.", "Rows are repeated visitor snapshots and are not independent."], "dataset_notice": "Descriptive Retailrocket output; proposed cohort and label, not approved findings"}
     (out / "descriptive_statistics.json").write_text(json.dumps(eda, indent=2, default=_json_default), encoding="utf-8")
     (ROOT / "research/statistics").mkdir(parents=True, exist_ok=True)

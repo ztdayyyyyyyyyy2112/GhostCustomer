@@ -206,7 +206,7 @@ def main() -> int:
                             "audit_complete": int(trace.eligible_audit.sum()), "research_complete": int(trace.eligible_research.sum()),
                             "censored_history_eligible": int((trace.history_eligible & ~trace.horizon_mature).sum())})
     cohort_flow = {"primary_scenario": primary_flow, "window_comparison": _window_sensitivity(events, config),
-                   "eligibility": "min 5 history events, at least 2 active weeks, baseline activity; audit vs research eligibility shown separately"}
+                   "eligibility": f"min {min(config['eligibility']['min_pre_events'])} history events, at least {min(config['eligibility']['min_active_weeks'])} active weeks, baseline activity; audit vs research eligibility shown separately"}
     (out / "cohort_flow.json").write_text(json.dumps(cohort_flow, indent=2), encoding="utf-8")
 
     sensitivity = {"scenario": primary_scenario["id"], "label_sensitivity": _label_sensitivity(labels, features, config),
