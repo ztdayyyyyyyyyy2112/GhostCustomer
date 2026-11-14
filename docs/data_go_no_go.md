@@ -2,6 +2,8 @@
 
 Computed from the local source whose SHA-256 is pinned in `data/config/pipeline.json`. Run `python -m data.scripts.run_pipeline --mode audit_compat`, then `python -m data.scripts.export_supplementary` to reproduce core and supplementary outputs. All processed outputs are ignored by Git.
 
+A small reviewable row-count/hash snapshot is committed at `research/feasibility/retailrocket_run_manifest.json`; raw and customer-level processed artifacts remain local and ignored.
+
 ## Recommendation
 
 **GO for a reproducible course-project prototype; NO-GO for claiming validated ghost-customer prediction or publishing derived records.** The file has 2,756,101 events and 1,407,580 anonymous visitor IDs, but views are 96.7% of events, exact duplicates are retained and flagged, and `visitorid` is not a verified person/account. The label is a behavioral proxy, not observed churn.
