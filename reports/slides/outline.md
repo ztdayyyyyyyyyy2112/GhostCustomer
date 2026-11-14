@@ -12,7 +12,7 @@ Target: a concise talk that all four members can explain. Use real result figure
 | 6 | Inferential results | Hypotheses, test assumptions, CI, p, effect size |
 | 7 | Regression | Coefficients/OR with CIs, diagnostics, interpretation |
 | 8 | Forecast | Actual/fitted/future, baseline, intervals, error metrics |
-| 9 | ML evaluation | Baseline comparison, PR-AUC, recall/precision, calibration |
+| 9 | ML evaluation | Majority and Decision Tree benchmarks versus logistic/RF on the same held-out split; PR-AUC, recall/precision, calibration |
 | 10 | Explainability and limits | Verified feature attribution; no causal wording |
 | 11 | Dashboard demo | Overview → customer timeline → stats → forecast → predict |
 | 12 | Conclusions and limitations | Answers to RQ1–RQ4 and study constraints |
