@@ -55,7 +55,7 @@
     "feature_purchases_1w", "feature_purchases_2w", "feature_purchases_4w", "feature_purchases_6w",
     "feature_events_1w", "feature_events_2w", "feature_events_4w", "feature_events_6w",
     "feature_active_days_4w", "feature_recency_days", "feature_days_since_last_view", "feature_days_since_last_cart", "feature_days_since_last_purchase",
-    "feature_frequency_events_per_active_week", "feature_baseline_sessions_per_week", "feature_observation_sessions_per_week",
+    "feature_frequency_events_per_active_week", "feature_baseline_sessions_per_week", "feature_observation_sessions_per_week", "feature_baseline_events_per_week", "feature_observation_events_per_week",
     "feature_decay_ratio", "feature_decay_ratio_is_null", "feature_eds", "feature_eds_is_null", "feature_slope_sessions_6w", "feature_slope_sessions_6w_is_null",
     "feature_cart_to_view", "feature_cart_to_view_is_null", "feature_any_purchase_pre", "feature_n_distinct_items_pre", "feature_total_events_pre"
   ]
