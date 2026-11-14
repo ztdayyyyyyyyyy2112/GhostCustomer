@@ -1,0 +1,62 @@
+{
+  "config_version": "1.0.0",
+  "data_version": "retailrocket-ghost-v1-proposed",
+  "source": {
+    "name": "Retailrocket recommender system dataset",
+    "version": "Kaggle dataset version 2",
+    "url": "https://www.kaggle.com/datasets/retailrocket/ecommerce-dataset",
+    "sha256": "3745aa83238b1e6d44d8fda209807899f420084398f94ddf745f3cbcfecbf9e7",
+    "bytes": 94237913,
+    "rows": 2756101,
+    "raw_path": "data/raw/events.csv",
+    "license": "CC BY-NC-SA 4.0"
+  },
+  "time": {
+    "unit": "milliseconds",
+    "timezone": "UTC",
+    "week_start": "MONDAY",
+    "first_full_week": "2015-05-04T00:00:00Z",
+    "observed_through": "2015-09-14T00:00:00Z",
+    "feature_interval": "[window_start,T)",
+    "label_interval": "[T,T+C)"
+  },
+  "preferred_scenario_id": "b4_o2_c2_min5_active2_gap30_theta50",
+  "scenarios": [
+    {"id": "b4_o2_c2", "baseline_weeks": 4, "observation_weeks": 2, "confirmation_weeks": 2},
+    {"id": "b4_o3_c2", "baseline_weeks": 4, "observation_weeks": 3, "confirmation_weeks": 2},
+    {"id": "b6_o2_c4", "baseline_weeks": 6, "observation_weeks": 2, "confirmation_weeks": 4}
+  ],
+  "eligibility": {
+    "min_pre_events": [5, 10],
+    "min_active_weeks": [2, 3],
+    "rules": ["audit_compat", "research"],
+    "research_requires_observation_event": true,
+    "reason_precedence": ["insufficient_events", "insufficient_active_weeks", "no_baseline_activity", "no_observation_activity", "immature_horizon", "ok"]
+  },
+  "sessions": {"gap_minutes": [15, 30, 60], "preferred_gap_minutes": 30, "cross_week_assignment": "session_start_week"},
+  "labels": {
+    "engagement_unit": ["sessions", "events"],
+    "preferred_engagement_unit": "sessions",
+    "theta": [0.5, 0.4, 0.3],
+    "preferred_theta": 0.5,
+    "no_purchase_variants": [false, true],
+    "preferred_require_no_purchase": false,
+    "version": "ghost-baseline-ratio-v1-proposed",
+    "rule": "r_conf/r_base < theta; recovered when r_obs/r_base < theta and r_conf/r_base >= theta; zero future events is inactive"
+  },
+  "duplicate_policy": {"retain_raw_rows": true, "flag_exact_duplicates": true, "sensitivity_excludes_flagged": true},
+  "extreme_visitor_quantile": 0.999,
+  "seed": 3013,
+  "feature_columns": [
+    "visitorid", "customer_id", "snapshot_date", "scenario_id", "snapshot_index", "feature_max_event_time_utc",
+    "feature_sessions_1w", "feature_sessions_2w", "feature_sessions_4w", "feature_sessions_6w",
+    "feature_views_1w", "feature_views_2w", "feature_views_4w", "feature_views_6w",
+    "feature_carts_1w", "feature_carts_2w", "feature_carts_4w", "feature_carts_6w",
+    "feature_purchases_1w", "feature_purchases_2w", "feature_purchases_4w", "feature_purchases_6w",
+    "feature_events_1w", "feature_events_2w", "feature_events_4w", "feature_events_6w",
+    "feature_active_days_4w", "feature_recency_days", "feature_days_since_last_view", "feature_days_since_last_cart", "feature_days_since_last_purchase",
+    "feature_frequency_events_per_active_week", "feature_baseline_sessions_per_week", "feature_observation_sessions_per_week",
+    "feature_decay_ratio", "feature_decay_ratio_is_null", "feature_eds", "feature_eds_is_null", "feature_slope_sessions_6w", "feature_slope_sessions_6w_is_null",
+    "feature_cart_to_view", "feature_cart_to_view_is_null", "feature_any_purchase_pre", "feature_n_distinct_items_pre", "feature_total_events_pre"
+  ]
+}
