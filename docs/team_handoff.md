@@ -1,10 +1,11 @@
 # Asynchronous team handoff
 
-Updated 9 November 2026. This is a checklist for review across different working hours. The backend foundation and frontend can run together with empty states or clearly labeled fixtures. It is not a claim that the data, analysis, or inference model is finished. Reply in a PR or the decision log with the exact artifact path and any change needed in the shared API contract. See `docs/integration_handoff.md` for the file/function interface and acceptance checks.
+Updated 14 November 2026. This is a checklist for review across different working hours. The backend foundation and frontend can run together with empty states or clearly labeled fixtures. It is not a claim that the data, analysis, or inference model is finished. Reply in a PR or the decision log with the exact artifact path and any change needed in the shared API contract. See `docs/integration_handoff.md` for the file/function interface and acceptance checks.
 
 ## Thành — frontend and coordination
 
 - Frontend routes now cover overview, customers, statistics, forecast, prediction, and model metrics. Mock mode is labeled as illustrative. Lint and production build pass locally.
+- Own the Decision Tree benchmark for RQ3 in `research/baselines/`. Use Lâm's approved pre-T features and Kiệt's visitor-aware temporal split. Report its held-out metrics and limitations; it is not automatically the model served by `/api/predict`.
 - Review UI copy against the eventual label definition, approve D-01–D-07 only with evidence, and compare real API responses using `docs/integration_test.md`.
 - Keep the report, paper, slides, and video aligned with the evidence register. Resolve the repository naming convention before final submission.
 
