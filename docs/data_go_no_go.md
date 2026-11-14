@@ -12,7 +12,7 @@ Use B+O+C = 4+2+2 weeks, minimum 5 history events across at least 2 active weeks
 
 For the primary run, `data/processed/cohort_flow.json` records 85,899 complete audit-eligible snapshots, 24,768 distinct visitors, 20,989 repeat visitors, and 11,590 history-eligible right-censored snapshots. E-00 golden counts are reproduced by `data/scripts/tests/test_cohort.py`. Across the three configured windows, history-eligible snapshot counts are 97,489 (4+2+2), 100,140 (4+3+2), and 128,323 (6+2+4); the last option has 40,043 censored history-eligible snapshots, a substantial coverage cost.
 
-The primary theta sensitivity gives session-based Ghost counts 2,619 / 1,740 / 1,188 for theta 0.5 / 0.4 / 0.3. Event-based counts are 5,127 / 3,997 / 3,027, showing how view-heavy event volume changes the operational label. With theta 0.5, session gaps 15/30/60 produce 2,998 / 2,619 / 2,310 Ghost rows. These are label sensitivity counts, not churn prevalence estimates.
+The primary theta sensitivity gives session-based Ghost counts 2,619 / 1,740 / 1,188 for theta 0.5 / 0.4 / 0.3. Event-based counts are 5,127 / 3,997 / 3,027, showing how view-heavy event volume changes the operational label. The no-purchase variant moves 36 / 24 / 15 session-based Ghost rows to Active at those thresholds. With theta 0.5, session gaps 15/30/60 produce 2,998 / 2,619 / 2,310 Ghost rows. These are label sensitivity counts, not churn prevalence estimates.
 
 ## Main risks and gates
 
