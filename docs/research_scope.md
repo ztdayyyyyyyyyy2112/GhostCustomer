@@ -19,7 +19,7 @@ Working hypotheses for RQ1/RQ2: lower recent activity, longer recency, and steep
 
 ## Time boundary and labels
 
-Features use events at or before T. A confirmation horizon after T defines the future label; rows without a fully observable horizon are `unknown` and excluded from supervised evaluation. Candidate window configurations such as 4+2+2 and 4+3+2 weeks are audit scenarios only. Do not select a window, decline threshold, or session-gap rule until cohort counts, class balance, right-censoring, and sensitivity have been inspected. Do not construct a label from the same pre-T features used to predict it.
+Features use events at or before T. A confirmation horizon after T defines the future label; rows without a fully observable horizon are `unknown` and excluded from supervised evaluation. The current proposed relative label divides future engagement by baseline engagement, so baseline/decay/EDS features overlap with target construction. Treat this as a circularity risk: report it and require a baseline-feature ablation or a future-only alternative before making predictive claims. Candidate windows, thresholds, and session gaps remain unapproved until Thành records D-01–D-04.
 
 Split by time and prevent overlap leakage across snapshots from the same visitor. Fit imputers and scalers on training data only. For inferential tests using repeated snapshots, select an independent visitor-level sample or use clustered standard errors.
 

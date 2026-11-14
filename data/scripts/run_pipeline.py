@@ -26,6 +26,16 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _json_default(value):
+    if hasattr(value, "item"):
+        return value.item()
+    if isinstance(value, pd.Timestamp):
+        return value.isoformat()
+    if pd.isna(value):
+        return None
+    raise TypeError(f"cannot serialize {type(value).__name__}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Reproduce the Retailrocket data pipeline")
     parser.add_argument("--config", type=Path, default=ROOT / "data/config/pipeline.json")
@@ -79,7 +89,7 @@ def main() -> int:
         "ghost_rate": count["ghost"] / total if total else None,
         "date_range": {"start": customers.snapshot_date.min(), "end": customers.snapshot_date.max()} if total else None,
         "dataset_notice": "Retailrocket derived data — proposed cohort and label; see E-01/E-02"}
-    (out / "overview.json").write_text(json.dumps(overview, indent=2), encoding="utf-8")
+    (out / "overview.json").write_text(json.dumps(overview, indent=2, default=_json_default), encoding="utf-8")
 
     # E-03 is descriptive only; repeated snapshots are retained and their dependence is disclosed.
     complete = merged.loc[merged.horizon_mature & merged.label_status.ne("unknown")]
@@ -90,11 +100,11 @@ def main() -> int:
             values = pd.to_numeric(frame[metric], errors="coerce").dropna()
             if values.empty: continue
             hist, edges = __import__("numpy").histogram(values, bins=10)
-            groups.append({"status": status, "metric": metric, "unit": "count" if "sessions" in metric or "views" in metric or "carts" in metric or "purchases" in metric or "days" in metric else "ratio", "n": len(values), "mean": values.mean(), "median": values.median(), "q1": values.quantile(.25), "q3": values.quantile(.75), "min": values.min(), "max": values.max(), "histogram": [{"lower": float(edges[i]), "upper": float(edges[i+1]), "count": int(hist[i])} for i in range(len(hist))]})
+            groups.append({"name": str(status), "metric": metric, "unit": "count" if "sessions" in metric or "views" in metric or "carts" in metric or "purchases" in metric or "days" in metric else "ratio", "n": int(len(values)), "mean": float(values.mean()), "median": float(values.median()), "q1": float(values.quantile(.25)), "q3": float(values.quantile(.75)), "min": float(values.min()), "max": float(values.max()), "histogram": [{"lower": float(edges[i]), "upper": float(edges[i+1]), "count": int(hist[i])} for i in range(len(hist))]})
     eda = {"groups": groups, "estimates": [], "tests": [], "p_values": [], "cis": [], "assumptions": ["Descriptive statistics only; no hypothesis tests or confidence intervals.", "Rows are repeated visitor snapshots and are not independent."], "dataset_notice": "Descriptive Retailrocket output; proposed cohort and label, not approved findings"}
-    (out / "descriptive_statistics.json").write_text(json.dumps(eda, indent=2), encoding="utf-8")
+    (out / "descriptive_statistics.json").write_text(json.dumps(eda, indent=2, default=_json_default), encoding="utf-8")
     (ROOT / "research/statistics").mkdir(parents=True, exist_ok=True)
-    (ROOT / "research/statistics/results.json").write_text(json.dumps(eda, indent=2), encoding="utf-8")
+    (ROOT / "research/statistics/results.json").write_text(json.dumps(eda, indent=2, default=_json_default), encoding="utf-8")
 
     manifest = {"generated_utc": datetime.now(timezone.utc).isoformat(), "source": source,
         "config_sha256": sha256(args.config), "git_revision": __import__("subprocess").run(["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True).stdout.strip(),

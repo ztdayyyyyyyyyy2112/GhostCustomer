@@ -11,8 +11,8 @@ Updated 14 November 2026. This is a checklist for review across different workin
 
 ## Lâm — dataset and cohort
 
-- Deliver a provenance/license record, raw hashes, field dictionary, timestamp handling, event counts, visitor coverage, missingness, and duplicate summary (E-01).
-- For candidate time windows, provide eligible snapshot counts, ghost/active/unknown counts, censoring, and sensitivity of label and session rules (E-02). Propose D-02–D-04 decisions from those results.
+- Delivered locally as preliminary E-01: provenance/license, verified raw hash, field dictionary, timestamp handling, event counts, visitor coverage, missingness, and duplicate summary. See `docs/data_sources.md` and `data/README.md`.
+- Delivered locally as preliminary E-02: three B+O+C windows, 15/30/60-minute session gaps, theta sensitivity, no-purchase session-label variant, class counts, and censoring. Outputs are ignored under `data/processed/`; see `docs/data_go_no_go.md`. Recommend D-02–D-04 only after reviewing these outputs; Thành approval remains open.
 - Supply processed-data schema and pre-T feature definitions. Review `Customer`, `CustomerWeekly`, repeated visitor snapshots, and the artifact format in `docs/integration_handoff.md`; flag any field the dataset cannot support.
 
 ## Long — statistical analysis, forecast, and backend

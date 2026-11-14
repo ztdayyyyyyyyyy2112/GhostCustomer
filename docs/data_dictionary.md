@@ -25,9 +25,11 @@ One row is `(visitorid, snapshot_date, scenario_id)`. `customer_id` is `str(visi
 | `feature_frequency_events_per_active_week` | events/week | Pre-T event count divided by active pre-T weeks; null if no active week. |
 | `feature_baseline_sessions_per_week` | sessions/week | Sessions in B divided by B weeks; used by the proposed label and flagged as target-component. |
 | `feature_observation_sessions_per_week` | sessions/week | Sessions in O divided by O weeks. |
+| `feature_baseline_events_per_week` | events/week | Raw event rows in B divided by B weeks; used only for the event-count label sensitivity. |
+| `feature_observation_events_per_week` | events/week | Raw event rows in O divided by O weeks; used only for the event-count label sensitivity. |
 | `feature_decay_ratio` | ratio or null | Observation sessions/week divided by baseline sessions/week; null and `feature_decay_ratio_is_null=true` when baseline rate is zero. |
 | `feature_eds` | score or null | `max(0, 1 - feature_decay_ratio)`; null and corresponding flag when ratio is null. This is a descriptive feature, not a probability. |
-| `feature_slope_sessions_6w` | sessions/week² or null | OLS slope of weekly sessions over six pre-T weeks; null when fewer than three weeks are observed, with a null flag. |
+| `feature_slope_sessions_6w` | sessions/week² or null | OLS slope of weekly sessions over the six pre-T week bins, with zero-count weeks included; null when no session exists in the window, with a null flag. |
 | `feature_cart_to_view` | ratio or null | Pre-T carts divided by views; null and flag when no views exist. |
 | `feature_any_purchase_pre` | boolean | Whether any pre-T transaction exists. |
 | `feature_n_distinct_items_pre` | count | Distinct pre-T item IDs; raw item IDs are not exposed as predictors. |
@@ -39,7 +41,7 @@ The relative-label denominator uses baseline sessions/week. Kiệt should run th
 
 ## Label row
 
-`customer_labels.parquet` contains `visitorid`, `snapshot_date`, `label_end_utc`, `label_status`, `target_ghost`, `target_disengaged`, `future_activity`, `future_engagement_rate`, `horizon_mature`, `label_rule_id`, `label_version`, and `params_hash`. The proposed session-based rule compares confirmation sessions/week with baseline sessions/week using theta 0.5, 0.4, or 0.3. `inactive` has zero future events; `ghost` is still active but below the baseline ratio; `recovered` dipped below theta in O then returned to or above theta in C; remaining mature cases are `active`; immature C is `unknown`. Unknown targets are null. A no-purchase variant is reported separately.
+`customer_labels.parquet` also stores `future_events`, `future_sessions`, and `future_purchases`. The proposed label compares confirmation engagement/week with the matching baseline rate, using theta 0.5, 0.4, or 0.3. `inactive` has zero future events; `ghost` has future activity but falls below the baseline ratio; `recovered` dipped below theta in O then returned to or above theta in C; remaining scoreable mature cases are `active`; active rows with zero baseline rate and immature C rows are `unknown` with null targets. Session-based no-purchase sensitivity is reported separately; the event-count baseline features support the event-based sensitivity.
 
 The minimal forecast handoff CSV has exactly `visitorid,snapshot_date,label_end,label_status,target_ghost`. Regression input includes `visitorid,snapshot_date,feature_max_event_time,outcome_end,next_engagement` followed by the chosen predictor columns; `next_engagement=log1p(confirmation sessions per week)` in the proposed export.
 

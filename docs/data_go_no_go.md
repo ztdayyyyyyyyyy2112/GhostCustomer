@@ -1,6 +1,6 @@
 # Retailrocket data go/no-go (proposed)
 
-Generated from the local source whose SHA-256 is pinned in `data/config/pipeline.json`. Regenerate with `python -m data.scripts.run_pipeline --mode audit_compat`; outputs are local under ignored `data/processed/`.
+Computed from the local source whose SHA-256 is pinned in `data/config/pipeline.json`. Core features, labels, customers, overview, and descriptive tables are reproducible with `python -m data.scripts.run_pipeline --mode audit_compat`. Supplementary window/session sensitivity and customer detail files were generated locally and are recorded in `data/processed/manifest.json`; a consolidated one-command rebuild for those supplementary outputs remains to be added. All processed outputs are ignored by Git.
 
 ## Recommendation
 
@@ -20,7 +20,7 @@ The primary theta sensitivity gives session-based Ghost counts 2,619 / 1,740 / 1
 - Relative labels use baseline engagement in their denominator. Report the circularity; compare an ablation without baseline/decay/EDS features before model claims.
 - Zero-baseline users are not scoreable by the ratio rule; keep them `unknown` rather than silently forcing a ratio.
 - Confirmation horizons past the observation boundary remain `unknown` with null targets.
-- Session gap 15/30/60, duplicate exclusion, no-purchase variant, and all three window configurations must be reviewed before D-02/D-03/D-04 are closed.
+- All three configured windows and session gaps 15/30/60 were compared. The no-purchase label variant is reported for session-based thresholds; it moves 45 / 32 / 18 ghost rows to active at theta 0.5 / 0.4 / 0.3. Duplicate-exclusion sensitivity has not yet been computed. Review these outputs and obtain owner approval before closing D-02/D-03/D-04.
 - License is CC BY-NC-SA 4.0 per the source page. Do not redistribute raw data; get course-team review before sharing derived data.
 
 ## Data products

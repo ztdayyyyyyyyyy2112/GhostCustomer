@@ -1,6 +1,6 @@
-# Real-data integration handoff (draft v0.3)
+# Real-data integration handoff (draft v0.4)
 
-Updated 9 November 2026. The frontend and FastAPI backend run together now. The files and Python function below are the remaining inputs needed to replace empty states. The research owners must review this draft before producing final artifacts; the presence of a file alone does not approve a result.
+Updated 14 November 2026. The frontend and FastAPI backend run together. Lâm's proposed Retailrocket `overview.json`, `customers.json`, customer detail files, and descriptive `research/statistics/results.json` are now generated locally under `data/processed/` (statistics also has a small reviewed-shape JSON in Git). Outputs remain preliminary pending owner review; this handoff does not approve the cohort or label.
 
 ## Artifact locations and owners
 
@@ -32,4 +32,4 @@ Updated 9 November 2026. The frontend and FastAPI backend run together now. The 
 4. Start `python -m uvicorn backend.app.main:app --port 8000` and the frontend on port 3000. Visit all seven routes in `docs/runbook.md`; check the browser console, CORS, 404/422/503 cases, nulls, date selection, and mobile layout.
 5. For each non-empty API section, compare a real response and a screenshot to the exact source artifact. Keep the model, report, paper, slides, and demo on the same cohort/window/label/version. Do not publish results from fixture mode.
 
-Current limits: no approved processed cohort, statistical/forecast result, saved evaluation, or real inference runtime is present. Frontend/backend wiring and empty-state behavior have been tested; scientific validity and actual model inference remain to be tested after those inputs arrive.
+Current limits: generated customer and descriptive artifacts use a proposed cohort/label and are not approved findings. Hypothesis tests/CIs, forecasting results, saved model evaluation, and real inference runtime remain outstanding with their owners. The checked customer/detail artifacts pass the structural checker; scientific approval and model inference remain outstanding.
