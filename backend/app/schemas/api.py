@@ -91,7 +91,11 @@ class StatisticGroup(BaseModel):
     metric: str
     unit: str
     n: int
+    n_total: int
+    missing_n: int
+    missing_rate: float
     mean: float | None = None
+    sd: float | None = None
     median: float | None = None
     q1: float | None = None
     q3: float | None = None

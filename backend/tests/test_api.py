@@ -182,6 +182,32 @@ def test_statistics_endpoint(client: TestClient) -> None:
     assert "Results unavailable until statistical pipeline runs" in data["dataset_notice"]
 
 
+def test_statistics_group_exposes_sd_and_missingness(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch, tmp_path
+) -> None:
+    stats_file = tmp_path / "statistics" / "results.json"
+    stats_file.parent.mkdir(parents=True)
+    stats_file.write_text(json.dumps({
+        "groups": [{
+            "name": "ghost", "metric": "sessions", "unit": "count", "n": 2,
+            "n_total": 3, "missing_n": 1, "missing_rate": 1 / 3, "mean": 2.0,
+            "sd": 1.4142135623730951, "median": 2.0, "q1": 1.5, "q3": 2.5,
+            "min": 1.0, "max": 3.0, "histogram": [],
+        }],
+        "estimates": [], "tests": [], "p_values": [], "cis": [],
+        "assumptions": [], "dataset_notice": "Preliminary data",
+    }), encoding="utf-8")
+    monkeypatch.setattr(settings, "RESEARCH_DIR", tmp_path)
+
+    response = client.get("/api/statistics")
+
+    assert response.status_code == 200
+    group = response.json()["groups"][0]
+    assert group["sd"] == pytest.approx(1.4142135623730951)
+    assert group["missing_n"] == 1
+    assert group["missing_rate"] == pytest.approx(1 / 3)
+
+
 def test_invalid_research_artifact_is_not_silently_replaced(
     demo_client: TestClient, monkeypatch: pytest.MonkeyPatch, tmp_path
 ) -> None:

@@ -1,6 +1,6 @@
-# Real-data integration handoff (draft v0.3)
+# Real-data integration handoff (draft v0.4)
 
-Updated 9 November 2026. The frontend and FastAPI backend run together now. The files and Python function below are the remaining inputs needed to replace empty states. The research owners must review this draft before producing final artifacts; the presence of a file alone does not approve a result.
+Updated 15 November 2026. The frontend and FastAPI backend run together. Lâm's proposed Retailrocket `overview.json`, `customers.json`, and customer detail files are generated locally under `data/processed/`; Long's E-03 `research/statistics/results.json` contains descriptive group summaries including sample SD and missingness, with Lâm reviewing the data/cohort inputs. Raw and customer-level processed outputs remain local; the aggregate E-03 JSON is tracked for the API contract. All outputs remain preliminary: D-01–D-04 are still open; the conversation assumption was only for checking remaining work.
 
 ## Artifact locations and owners
 
@@ -9,7 +9,7 @@ Updated 9 November 2026. The frontend and FastAPI backend run together now. The 
 | Lâm | `data/processed/overview.json` | `/api/overview`; exact `OverviewResponse` shape in `docs/api_contract.md`, with counts/rates based on the approved cohort and a source notice. |
 | Lâm | `data/processed/customers.json` | `/api/customers`; JSON array of `Customer` rows, one per `(customer_id, snapshot_date)`. Keep duplicate visitor IDs across dates; do not duplicate the same pair. Dates are ISO `YYYY-MM-DD`. |
 | Lâm | `data/processed/customer_details/YYYY-MM-DD/<sha256(customer_id UTF-8)>.json` | `/api/customers/{id}?snapshot_date=YYYY-MM-DD`; each file is a complete `CustomerDetailResponse`, including matching `customer`, `status`, `current_features`, `weekly_timeline`, and `dataset_notice`. The filename is the lowercase 64-character SHA-256 hex digest of the UTF-8 customer ID. |
-| Long | `research/statistics/results.json` | `/api/statistics`; `StatisticsResponse` shape, with N, method, assumptions, CIs and effect sizes tied to E-03/E-04/E-05. |
+| Long (Lâm reviews data/cohort) | `research/statistics/results.json` | `/api/statistics`; `StatisticGroup` includes observed `n`, `n_total`, `missing_n`, `missing_rate`, sample `sd`, and descriptive distributions for E-03; inferential CIs/effect sizes belong to E-04/E-05. |
 | Long | `research/forecasting/results.json` | `/api/forecast`; `ForecastResponse` shape, dated observed/fitted/future points and holdout errors tied to E-06. |
 | Kiệt | `ai/evaluation/metrics.json` | `/api/model/metrics`; `ModelMetricsResponse` shape, evaluation context, class support, prevalence, threshold, confusion matrix and calibration tied to E-07. |
 | Kiệt + Long | `ai/inference/runtime.py` and model artifacts outside Git | `/api/predict`; export `predict(payload: dict) -> dict`. The backend passes exactly one of `{customer_id, snapshot_date}` or `{features}` and validates the returned dictionary as `PredictResponse`. See behavior below. |
@@ -32,4 +32,4 @@ Updated 9 November 2026. The frontend and FastAPI backend run together now. The 
 4. Start `python -m uvicorn backend.app.main:app --port 8000` and the frontend on port 3000. Visit all seven routes in `docs/runbook.md`; check the browser console, CORS, 404/422/503 cases, nulls, date selection, and mobile layout.
 5. For each non-empty API section, compare a real response and a screenshot to the exact source artifact. Keep the model, report, paper, slides, and demo on the same cohort/window/label/version. Do not publish results from fixture mode.
 
-Current limits: no approved processed cohort, statistical/forecast result, saved evaluation, or real inference runtime is present. Frontend/backend wiring and empty-state behavior have been tested; scientific validity and actual model inference remain to be tested after those inputs arrive.
+Current limits: generated customer and descriptive artifacts use a proposed cohort/label and are not approved findings. Hypothesis tests/CIs, forecasting results, saved model evaluation, and real inference runtime remain outstanding with their owners. The checked customer/detail artifacts pass the structural checker; scientific approval and model inference remain outstanding.

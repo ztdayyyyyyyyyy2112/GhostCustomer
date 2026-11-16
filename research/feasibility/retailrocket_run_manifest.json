@@ -1,0 +1,42 @@
+{
+  "data_version": "retailrocket-ghost-v1-proposed",
+  "source": {
+    "path": "data/raw/events.csv",
+    "sha256": "3745aa83238b1e6d44d8fda209807899f420084398f94ddf745f3cbcfecbf9e7",
+    "bytes": 94237913,
+    "rows": 2756101
+  },
+  "config_sha256": "35ea35b145d9d9e9a33dde88328f32db88c4a36aab62e837041a7f3bd5f948eb",
+  "pipeline_commit": "9c1896ee51aac2fc8954280efca387e43f7df1be",
+  "environment": {
+    "python": "3.12.13",
+    "pandas": "2.3.3"
+  },
+  "row_counts": {
+    "cohort_trace": 12893278,
+    "features": 97489,
+    "labels": 97489,
+    "customers": 97489,
+    "customer_details": 97489,
+    "label_status": {
+      "inactive": 71301,
+      "unknown": 11590,
+      "active": 9263,
+      "recovered": 2716,
+      "ghost": 2619
+    },
+    "window_scenarios": 3
+  },
+  "artifact_sha256": {
+    "cohort_flow.json": "e639f2eeb0549e657c7105a97a1b951b913d60d58b86ff51d4b156a499382df9",
+    "sensitivity.json": "5e93fd79b34f53837ce7abcb5afed973b3af0cfa28aa03af466525dbad94b286",
+    "customers.json": "25df970f2557236291701d38e8c8bab2cf6cc223e7ab14807ad9b5de81a7f66f",
+    "customer_features.parquet": "60a70a8ad8a857d1ed364f3f304b95a197a41b7ce0ec82fd3ddec85b0ef7516a",
+    "customer_labels.parquet": "7d22c1de2516ea9374f6ec1275d74c023d19ab0360c54d6be162d4bb3a2e59d7",
+    "overview.json": "9efd5542531c10795874f4ffcf127d84c689aeb3430751836b06268a1383a1ec",
+    "research/statistics/results.json": "354794505f4e6816c0a0f9f33ca378412df841255ff28d045f10db8054bb2594",
+    "research/feasibility/retailrocket_sensitivity.md": "43fe6347a59c8efa3b02b79d59af2b6f9633133d11576ae307ae2d8ee5be9720"
+  },
+  "generated_utc": "2026-11-14T23:19:28.233642+00:00",
+  "pipeline_worktree_dirty": true
+}

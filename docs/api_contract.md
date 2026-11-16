@@ -48,7 +48,7 @@ Pass `snapshot_date=YYYY-MM-DD` when opening a row from the customer list. One v
 
 Each published test should include `name`, `hypothesis`, `n`, `statistic`, `p_value`, `effect_size`, `ci_low`, `ci_high`, `method`, and `assumptions`; nulls are allowed when inapplicable. The arrays stay empty before analysis, not populated with demo p-values.
 
-For charts and summary tables, each `groups[]` item proposes `name`, `metric`, `unit`, `n`, `mean`, `median`, `q1`, `q3`, `min`, `max`, and `histogram: [{lower, upper, count}]`. Each `estimates[]` item proposes `name`, `n`, `estimate`, `ci_low`, `ci_high`, `method`, and `unit`. All values must come from the same reproducible analysis. These shapes remain open for review by Lâm and Long.
+For charts and summary tables, each `groups[]` item contains `name`, `metric`, `unit`, `n` (nonmissing values), `n_total` (rows in the mature, labeled group), `missing_n`, `missing_rate` (proportion from 0 to 1), `mean`, sample `sd`, `median`, `q1`, `q3`, `min`, `max`, and `histogram: [{lower, upper, count}]`. Missingness is computed after numeric coercion within each label group; `sd` is null when fewer than two values are observed. Each `estimates[]` item proposes `name`, `n`, `estimate`, `ci_low`, `ci_high`, `method`, and `unit`. All values must come from the same reproducible analysis. Long owns E-03; Lâm reviews its data and feature definitions.
 
 ### `GET /api/forecast`
 
