@@ -38,5 +38,7 @@
     "research/feasibility/retailrocket_sensitivity.md": "43fe6347a59c8efa3b02b79d59af2b6f9633133d11576ae307ae2d8ee5be9720"
   },
   "generated_utc": "2026-11-14T23:19:28.233642+00:00",
-  "pipeline_worktree_dirty": true
+  "pipeline_worktree_dirty": true,
+  "reproduction_status": "provisional_dirty_worktree",
+  "reproduction_note": "The recorded pipeline_commit does not identify the exact generating code because the worktree contained uncommitted changes. Re-run from a clean committed revision with the pinned raw source before treating these counts and hashes as final reproducible evidence."
 }
