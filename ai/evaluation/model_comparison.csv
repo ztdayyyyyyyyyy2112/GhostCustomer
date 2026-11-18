@@ -1,0 +1,9 @@
+name,family,feature_set,selected,probabilistic,val_pr_auc,test_pr_auc,test_pr_auc_ci95,test_roc_auc,test_f1,test_recall,test_precision,test_brier,threshold,params
+majority,baseline,full,False,True,0.2621,0.2535,"[0.203, 0.297]",0.5,0.4045,1.0,0.2535,0.1926,0.19,{}
+rule_eds,baseline,full,False,True,0.7745,0.8022,"[0.7314, 0.8631]",0.8693,0.6844,0.8257,0.5844,0.0989,0.09,{}
+logistic_regression,linear,full,False,True,0.8838,0.8988,"[0.8512, 0.9373]",0.9547,0.7299,0.9174,0.6061,0.0707,0.14,"{'C': 10.0, 'class_weight': None}"
+random_forest,tree,full,False,True,0.9091,0.9288,"[0.8862, 0.9589]",0.9717,0.744,1.0,0.5924,0.0582,0.15,"{'max_depth': 6, 'min_samples_leaf': 5, 'class_weight': None}"
+xgboost,boosting,full,False,True,0.9126,0.928,"[0.8872, 0.9583]",0.9702,0.7517,1.0,0.6022,0.0594,0.05,"{'max_depth': 3, 'min_child_weight': 10}"
+svm_rbf,optional,full,False,False,0.8173,0.8026,"[0.727, 0.8782]",0.9363,0.6749,1.0,0.5093,,0.4,"{'C': 0.3, 'class_weight': 'balanced'}"
+isolation_forest,optional,full,False,False,0.3674,0.3217,"[0.2552, 0.4161]",0.6429,0.4778,0.8899,0.3266,,0.08,{'contamination': 'auto'}
+xgboost+platt,boosting,full,True,True,0.9126,0.928,"[0.8872, 0.9583]",0.9702,0.7466,1.0,0.5956,0.0592,0.05,"{'max_depth': 3, 'min_child_weight': 10}"

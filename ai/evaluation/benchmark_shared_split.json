@@ -1,0 +1,162 @@
+{
+  "note": "Decision Tree and Gaussian NB scripts run by Kiet on the shared split; owners (Thanh, Lam) to confirm.",
+  "runs": {
+    "decision_tree": {
+      "algorithm": "DecisionTreeClassifier",
+      "input_sha256": "f39af40962be6bb440f32fb63cd8e7ddf116f508ea95d8a35482dc5264df36dd",
+      "label_version": "ghost-baseline-ratio-v1-proposed",
+      "split_version": "visitor-temporal-v1_tr2015-07-06_va2015-07-27_te2015-08-24_f50-25-25_s3013",
+      "hyperparameters": {
+        "max_depth": 6,
+        "min_samples_leaf": 20,
+        "class_weight": "balanced",
+        "random_state": 42
+      },
+      "decision_threshold": 0.5,
+      "train": {
+        "n": 2214,
+        "ghost_n": 433
+      },
+      "validation": {
+        "n": 454,
+        "ghost_n": 119,
+        "ghost_prevalence": 0.2621145374449339,
+        "pr_auc": 0.8896006523582847,
+        "roc_auc": 0.9546971027216855,
+        "precision": 0.625,
+        "recall": 0.9243697478991597,
+        "f1": 0.7457627118644068,
+        "brier": 0.0947653441497523,
+        "confusion_matrix": [
+          [
+            269,
+            66
+          ],
+          [
+            9,
+            110
+          ]
+        ]
+      },
+      "test": {
+        "n": 430,
+        "ghost_n": 109,
+        "ghost_prevalence": 0.2534883720930233,
+        "pr_auc": 0.9272626507726336,
+        "roc_auc": 0.9729915116179371,
+        "precision": 0.6287425149700598,
+        "recall": 0.963302752293578,
+        "f1": 0.7608695652173914,
+        "brier": 0.08031488084260346,
+        "confusion_matrix": [
+          [
+            259,
+            62
+          ],
+          [
+            4,
+            105
+          ]
+        ]
+      },
+      "majority_test": {
+        "n": 430,
+        "ghost_n": 109,
+        "ghost_prevalence": 0.2534883720930233,
+        "pr_auc": 0.2534883720930233,
+        "roc_auc": 0.5,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "brier": 0.2534883720930233,
+        "confusion_matrix": [
+          [
+            321,
+            0
+          ],
+          [
+            109,
+            0
+          ]
+        ]
+      }
+    },
+    "gaussian_nb": {
+      "algorithm": "GaussianNB",
+      "input_sha256": "f39af40962be6bb440f32fb63cd8e7ddf116f508ea95d8a35482dc5264df36dd",
+      "label_version": "ghost-baseline-ratio-v1-proposed",
+      "split_version": "visitor-temporal-v1_tr2015-07-06_va2015-07-27_te2015-08-24_f50-25-25_s3013",
+      "hyperparameters": {
+        "var_smoothing": 1e-09
+      },
+      "decision_threshold": 0.5,
+      "train": {
+        "n": 2214,
+        "ghost_n": 433
+      },
+      "validation": {
+        "n": 454,
+        "ghost_n": 119,
+        "ghost_prevalence": 0.2621145374449339,
+        "pr_auc": 0.7279964857328219,
+        "roc_auc": 0.849002884735984,
+        "precision": 0.6041666666666666,
+        "recall": 0.7310924369747899,
+        "f1": 0.6615969581749049,
+        "brier": 0.16694320685085656,
+        "confusion_matrix": [
+          [
+            278,
+            57
+          ],
+          [
+            32,
+            87
+          ]
+        ]
+      },
+      "test": {
+        "n": 430,
+        "ghost_n": 109,
+        "ghost_prevalence": 0.2534883720930233,
+        "pr_auc": 0.6667678768538929,
+        "roc_auc": 0.8609420103461087,
+        "precision": 0.5496688741721855,
+        "recall": 0.7614678899082569,
+        "f1": 0.6384615384615384,
+        "brier": 0.19166215011600882,
+        "confusion_matrix": [
+          [
+            253,
+            68
+          ],
+          [
+            26,
+            83
+          ]
+        ]
+      },
+      "majority_test": {
+        "n": 430,
+        "ghost_n": 109,
+        "ghost_prevalence": 0.2534883720930233,
+        "pr_auc": 0.2534883720930233,
+        "roc_auc": 0.5,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "brier": 0.2534883720930233,
+        "confusion_matrix": [
+          [
+            321,
+            0
+          ],
+          [
+            109,
+            0
+          ]
+        ]
+      }
+    }
+  }
+}

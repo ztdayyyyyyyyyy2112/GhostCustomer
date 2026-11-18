@@ -1,0 +1,330 @@
+{
+  "pipeline_version": "ai-pipeline-1.0.0",
+  "generated_utc": "2026-11-17T13:38:57.676496+00:00",
+  "synthetic": false,
+  "label_task": "ghost_vs_active",
+  "label_spec": {
+    "positive": [
+      "ghost"
+    ],
+    "negative": [
+      "active"
+    ]
+  },
+  "label_version": "ghost-baseline-ratio-v1-proposed",
+  "scenario_id": "b4_o2_c2",
+  "observed_through": "2015-09-14T00:00:00+00:00",
+  "inputs": {
+    "features": "data/processed/customer_features.parquet",
+    "features_sha256": "60a70a8ad8a857d1ed364f3f304b95a197a41b7ce0ec82fd3ddec85b0ef7516a",
+    "labels": "data/processed/customer_labels.parquet",
+    "labels_sha256": "7d22c1de2516ea9374f6ec1275d74c023d19ab0360c54d6be162d4bb3a2e59d7"
+  },
+  "environment": {
+    "python": "3.14.7",
+    "sklearn": "1.9.1",
+    "pandas": "2.3.3",
+    "numpy": "2.5.4"
+  },
+  "split_version": "visitor-temporal-v1_tr2015-07-06_va2015-07-27_te2015-08-24_f50-25-25_s3013",
+  "primary_feature_set": "full",
+  "features": [
+    "feature_sessions_1w",
+    "feature_sessions_2w",
+    "feature_sessions_4w",
+    "feature_sessions_6w",
+    "feature_views_1w",
+    "feature_views_2w",
+    "feature_views_4w",
+    "feature_views_6w",
+    "feature_carts_1w",
+    "feature_carts_2w",
+    "feature_carts_4w",
+    "feature_carts_6w",
+    "feature_purchases_1w",
+    "feature_purchases_2w",
+    "feature_purchases_4w",
+    "feature_purchases_6w",
+    "feature_events_1w",
+    "feature_events_2w",
+    "feature_events_4w",
+    "feature_events_6w",
+    "feature_active_days_4w",
+    "feature_recency_days",
+    "feature_days_since_last_view",
+    "feature_days_since_last_cart",
+    "feature_days_since_last_purchase",
+    "feature_frequency_events_per_active_week",
+    "feature_baseline_sessions_per_week",
+    "feature_observation_sessions_per_week",
+    "feature_baseline_events_per_week",
+    "feature_observation_events_per_week",
+    "feature_decay_ratio",
+    "feature_decay_ratio_is_null",
+    "feature_eds",
+    "feature_eds_is_null",
+    "feature_slope_sessions_6w",
+    "feature_slope_sessions_6w_is_null",
+    "feature_cart_to_view",
+    "feature_cart_to_view_is_null",
+    "feature_any_purchase_pre",
+    "feature_n_distinct_items_pre",
+    "feature_total_events_pre"
+  ],
+  "selected_model": {
+    "name": "xgboost+platt",
+    "model_version": "ghost-xgboost-cal-27f274df",
+    "params": {
+      "max_depth": 3,
+      "min_child_weight": 10
+    },
+    "selected_on": "validation PR-AUC among linear/tree/boosting models",
+    "calibration": {
+      "method": "Platt on visitor-grouped train out-of-fold scores",
+      "val_brier_raw": 0.06914,
+      "val_brier_calibrated": 0.06878,
+      "applied": true
+    }
+  },
+  "threshold": {
+    "operating_threshold": 0.05,
+    "rule": "min expected cost on validation, C_FN=5.0, C_FP=1.0",
+    "f1_max_threshold": 0.48,
+    "bands": {
+      "high": 0.05,
+      "medium": 0.05
+    },
+    "band_rule": "high >= operating threshold; medium >= threshold where validation recall >= 80%; else low"
+  },
+  "test": {
+    "support": 430,
+    "positives": 109,
+    "prevalence": 0.2534883720930233,
+    "threshold": 0.05,
+    "precision": 0.5956284153005464,
+    "recall": 1.0,
+    "f1": 0.7465753424657534,
+    "roc_auc": 0.970219211752265,
+    "pr_auc": 0.9279857205344674,
+    "brier": 0.0592147287504632,
+    "alert_rate": 0.4255813953488372,
+    "confusion_matrix": [
+      [
+        247,
+        74
+      ],
+      [
+        0,
+        109
+      ]
+    ]
+  },
+  "test_ece": 0.04192,
+  "bootstrap_ci_test": {
+    "majority": {
+      "n_boot_effective": 500,
+      "unit": "visitor",
+      "level": 0.95,
+      "pr_auc": [
+        0.203,
+        0.297
+      ],
+      "roc_auc": [
+        0.5,
+        0.5
+      ],
+      "f1": [
+        0.3375,
+        0.458
+      ],
+      "recall": [
+        1.0,
+        1.0
+      ],
+      "precision": [
+        0.203,
+        0.297
+      ]
+    },
+    "rule_eds": {
+      "n_boot_effective": 500,
+      "unit": "visitor",
+      "level": 0.95,
+      "pr_auc": [
+        0.7314,
+        0.8631
+      ],
+      "roc_auc": [
+        0.8209,
+        0.9123
+      ],
+      "f1": [
+        0.6041,
+        0.7446
+      ],
+      "recall": [
+        0.7527,
+        0.897
+      ],
+      "precision": [
+        0.4926,
+        0.6634
+      ]
+    },
+    "logistic_regression": {
+      "n_boot_effective": 500,
+      "unit": "visitor",
+      "level": 0.95,
+      "pr_auc": [
+        0.8512,
+        0.9373
+      ],
+      "roc_auc": [
+        0.9345,
+        0.9728
+      ],
+      "f1": [
+        0.6581,
+        0.7903
+      ],
+      "recall": [
+        0.8667,
+        0.9714
+      ],
+      "precision": [
+        0.5226,
+        0.6841
+      ]
+    },
+    "random_forest": {
+      "n_boot_effective": 500,
+      "unit": "visitor",
+      "level": 0.95,
+      "pr_auc": [
+        0.8862,
+        0.9589
+      ],
+      "roc_auc": [
+        0.958,
+        0.9836
+      ],
+      "f1": [
+        0.6701,
+        0.805
+      ],
+      "recall": [
+        1.0,
+        1.0
+      ],
+      "precision": [
+        0.5039,
+        0.6737
+      ]
+    },
+    "xgboost": {
+      "n_boot_effective": 500,
+      "unit": "visitor",
+      "level": 0.95,
+      "pr_auc": [
+        0.8872,
+        0.9583
+      ],
+      "roc_auc": [
+        0.9559,
+        0.983
+      ],
+      "f1": [
+        0.6833,
+        0.8109
+      ],
+      "recall": [
+        1.0,
+        1.0
+      ],
+      "precision": [
+        0.519,
+        0.6819
+      ]
+    },
+    "svm_rbf": {
+      "n_boot_effective": 500,
+      "unit": "visitor",
+      "level": 0.95,
+      "pr_auc": [
+        0.727,
+        0.8782
+      ],
+      "roc_auc": [
+        0.9117,
+        0.9578
+      ],
+      "f1": [
+        0.5987,
+        0.7372
+      ],
+      "recall": [
+        1.0,
+        1.0
+      ],
+      "precision": [
+        0.4273,
+        0.5838
+      ]
+    },
+    "isolation_forest": {
+      "n_boot_effective": 500,
+      "unit": "visitor",
+      "level": 0.95,
+      "pr_auc": [
+        0.2552,
+        0.4161
+      ],
+      "roc_auc": [
+        0.5859,
+        0.7027
+      ],
+      "f1": [
+        0.4113,
+        0.5369
+      ],
+      "recall": [
+        0.8303,
+        0.9434
+      ],
+      "precision": [
+        0.2664,
+        0.3832
+      ]
+    },
+    "xgboost+platt": {
+      "n_boot_effective": 500,
+      "unit": "visitor",
+      "level": 0.95,
+      "pr_auc": [
+        0.8872,
+        0.9583
+      ],
+      "roc_auc": [
+        0.9559,
+        0.983
+      ],
+      "f1": [
+        0.6714,
+        0.8082
+      ],
+      "recall": [
+        1.0,
+        1.0
+      ],
+      "precision": [
+        0.5053,
+        0.6781
+      ]
+    }
+  },
+  "explanations": {
+    "permutation": "validation PR-AUC drop, 10 repeats",
+    "local": "baseline replacement (train medians), probability points",
+    "shap": "SHAP (TreeExplainer), unit: model margin (log-odds for boosting, probability for forests), n=430 test rows"
+  }
+}
