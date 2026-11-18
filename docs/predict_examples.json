@@ -1,0 +1,63 @@
+{
+  "model_version": "ghost-xgboost-cal-27f274df",
+  "split_version": "visitor-temporal-v1_tr2015-07-06_va2015-07-27_te2015-08-24_f50-25-25_s3013",
+  "scenario_id": "b4_o2_c2",
+  "generated_utc": "2026-11-18T06:30:54.103707+00:00",
+  "examples": [
+    {
+      "request": {
+        "customer_id": "1000093",
+        "snapshot_date": "2015-09-14"
+      },
+      "status": 200,
+      "response": {
+        "score": 0.0145,
+        "risk_label": "low",
+        "top_factors": [
+          {
+            "feature": "feature_decay_ratio",
+            "contribution": 0.0075
+          },
+          {
+            "feature": "feature_frequency_events_per_active_week",
+            "contribution": -0.004
+          },
+          {
+            "feature": "feature_sessions_4w",
+            "contribution": -0.0032
+          },
+          {
+            "feature": "feature_baseline_events_per_week",
+            "contribution": 0.0026
+          },
+          {
+            "feature": "feature_cart_to_view",
+            "contribution": 0.0026
+          }
+        ],
+        "model_version": "ghost-xgboost-cal-27f274df",
+        "dataset_notice": "Retailrocket-derived proposed cohort/label; Ghost is an operational label, not proof of churn. Scores are associations, not causal effects. Label task ghost_vs_active; split visitor-temporal-v1_tr2015-07-06_va2015-07-27_te2015-08-24_f50-25-25_s3013; threshold chosen on validation. Operating threshold 0.05 (validation). top_factors: baseline_replacement_train_median, probability points, association only."
+      }
+    },
+    {
+      "request": {
+        "customer_id": "does-not-exist",
+        "snapshot_date": "2015-09-14"
+      },
+      "status": 404,
+      "response": {
+        "detail": "No pre-T feature row for customer does-not-exist at 2015-09-14"
+      }
+    },
+    {
+      "request": {
+        "customer_id": "1000093",
+        "snapshot_date": "2015-02-30"
+      },
+      "status": 422,
+      "response": {
+        "detail": "snapshot_date must be YYYY-MM-DD"
+      }
+    }
+  ]
+}
