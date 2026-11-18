@@ -24,9 +24,10 @@ Updated 15 November 2026. This is a checklist for review across different workin
 
 ## Kiệt — modeling and inference
 
-- Deliver the time/visitor split plan, leakage audit, majority/rule baselines, model comparison, calibration, threshold choice, and model card/artifact version (E-07).
-- Agree on pre-T inference inputs and `POST /api/predict` response with Long. Provide `ai/inference/runtime.py` as described in `docs/integration_handoff.md`; a model binary alone cannot activate prediction. Supply feature attribution only if actually computed from the saved model; include the explanation method and limitations (E-08).
-- Review the model metrics schema, especially `evaluation_context`, confusion-matrix orientation, support, prevalence, and calibration bins.
+- Implemented in `ai/` (see `ai/README.md`): visitor-aware temporal split with strict purging and manifest (D-05 proposal), leakage audit, majority/EDS baselines, logistic regression, random forest, gradient boosting, optional SVM/Isolation Forest, train-only preprocessing, Platt calibration, visitor-bootstrap CIs, validation-chosen cost threshold and risk bands, circularity ablation, permutation/SHAP/attribution explanations, model card, and `ai/inference/runtime.py`.
+- Everything is tested on synthetic events pushed through Lâm's real pipeline functions; no real-data metric is reported yet. After D-03/D-05 review and with processed inputs, run `python -m ai.training.run --optional-models` and `python -m ai.evaluation.report`, then record E-07/E-08.
+- The real run writes `data/processed/modeling_snapshots.csv`, the shared split for Thành's Decision Tree and Lâm's Gaussian NB (it passes their validator).
+- Long: `runtime.predict` raises `LookupError`/`ValueError`/`RuntimeError` (404/422/503). `model_service` now treats `RuntimeError` (runtime present, artifacts missing) as "no model", so demo fixtures keep working; tests isolate `MODELS_DIR`.
 
 ## Shared review gate
 

@@ -10,6 +10,8 @@ from backend.app.main import app
 def isolated_artifacts(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
     monkeypatch.setattr(settings, "DATA_PROCESSED_DIR", tmp_path / "processed")
     monkeypatch.setattr(settings, "RESEARCH_DIR", tmp_path / "research")
+    # Keep tests independent of a locally trained model or ai/evaluation outputs.
+    monkeypatch.setattr(settings, "MODELS_DIR", tmp_path / "ai" / "models")
 
 
 @pytest.fixture

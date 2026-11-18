@@ -39,6 +39,10 @@ def _run_real_predict(request: PredictRequest) -> PredictResponse | None:
         if isinstance(exc, ValidationError):
             raise HTTPException(status_code=503, detail="Model response does not match API contract") from exc
         raise HTTPException(status_code=422, detail=str(exc)) from exc
+    except RuntimeError:
+        # Runtime installed but its model/feature artifacts are absent: behave as
+        # "no model" so demo fixtures still work and normal mode returns 503.
+        return None
     except Exception as exc:
         raise HTTPException(status_code=503, detail="Prediction model unavailable") from exc
 

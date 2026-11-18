@@ -1,0 +1,32 @@
+name: AI module
+
+on:
+  pull_request:
+    branches: [develop]
+    paths:
+      - "ai/**"
+      - "data/scripts/**"
+      - "research/baselines/**"
+      - "backend/app/schemas/**"
+      - ".github/workflows/ai.yml"
+  push:
+    branches: [develop]
+    paths:
+      - "ai/**"
+      - ".github/workflows/ai.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: ai/requirements.txt
+      - run: python -m pip install -r ai/requirements.txt
+      - run: python -m pytest ai/tests -q
