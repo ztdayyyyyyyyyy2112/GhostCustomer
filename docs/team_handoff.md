@@ -25,8 +25,9 @@ Updated 15 November 2026. This is a checklist for review across different workin
 ## Kiệt — modeling and inference
 
 - Implemented in `ai/` (see `ai/README.md`): visitor-aware temporal split with strict purging and manifest (D-05 proposal), leakage audit, majority/EDS baselines, logistic regression, random forest, gradient boosting, optional SVM/Isolation Forest, train-only preprocessing, Platt calibration, visitor-bootstrap CIs, validation-chosen cost threshold and risk bands, circularity ablation, permutation/SHAP/attribution explanations, model card, and `ai/inference/runtime.py`.
-- Everything is tested on synthetic events pushed through Lâm's real pipeline functions; no real-data metric is reported yet. After D-03/D-05 review and with processed inputs, run `python -m ai.training.run --optional-models` and `python -m ai.evaluation.report`, then record E-07/E-08.
-- The real run writes `data/processed/modeling_snapshots.csv`, the shared split for Thành's Decision Tree and Lâm's Gaussian NB (it passes their validator).
+- First real-data run (17 Nov, window 4+2+2) is committed in `ai/evaluation/`. The write-up is `reports/full-report/ml_results.md` and the notebooks are in `ai/notebooks/`. Selected XGBoost+Platt: test PR-AUC 0.928 [0.887, 0.958]. The score is driven mostly by baseline level (regression to the mean); see the circularity notes. A 4+2+4 rerun follows the lecturer's feedback.
+- The real run writes `data/processed/modeling_snapshots.csv` (SHA-256 `f39af409…`), the shared split for Thành's Decision Tree and Lâm's Gaussian NB. Kiệt ran both scripts on it: DT test PR-AUC 0.927, GNB 0.667 (`ai/evaluation/benchmark_shared_split.json`); owners please confirm.
+- Long: the model file is shared privately (SHA-256 in `ai/evaluation/model_meta.json`). Run `python -m ai.inference.examples` to produce `docs/predict_examples.json`, then compare it with the live `/api/predict` responses.
 - Long: `runtime.predict` raises `LookupError`/`ValueError`/`RuntimeError` (404/422/503). `model_service` now treats `RuntimeError` (runtime present, artifacts missing) as "no model", so demo fixtures keep working; tests isolate `MODELS_DIR`.
 
 ## Shared review gate
