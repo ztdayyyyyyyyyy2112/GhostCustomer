@@ -1,6 +1,6 @@
 {
   "pipeline_version": "ai-pipeline-1.0.0",
-  "generated_utc": "2026-11-17T13:38:57.676496+00:00",
+  "generated_utc": "2026-11-20T05:50:16.805194+00:00",
   "synthetic": false,
   "label_task": "ghost_vs_active",
   "label_spec": {
@@ -21,7 +21,7 @@
     "labels_sha256": "7d22c1de2516ea9374f6ec1275d74c023d19ab0360c54d6be162d4bb3a2e59d7"
   },
   "environment": {
-    "python": "3.14.7",
+    "python": "3.14.3",
     "sklearn": "1.9.1",
     "pandas": "2.3.3",
     "numpy": "2.5.4"

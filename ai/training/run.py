@@ -37,6 +37,14 @@ from .models import PlattCalibrated, candidates, fit_candidate
 from .split import export_benchmark_csv, manifest, plan_split, split_frames
 
 
+def _artifact_path(path: Path) -> str:
+    """Keep committed run manifests portable across team machines."""
+    try:
+        return path.resolve().relative_to(config.ROOT.resolve()).as_posix()
+    except ValueError:
+        return f"external/{path.name}"
+
+
 def _sha256(path: Path) -> str | None:
     if not path or not Path(path).exists():
         return None
@@ -212,6 +220,8 @@ def run(features_path=None, labels_path=None, out_dir: Path | None = None, model
     attr.to_csv(out_dir / "attribution_summary.csv", index=False)
     if shap_tab is not None:
         shap_tab.to_csv(out_dir / "shap_importance.csv", index=False)
+    else:
+        (out_dir / "shap_importance.csv").unlink(missing_ok=True)
     if coef is not None:
         coef.to_csv(out_dir / "logistic_coefficients.csv", index=False)
 
@@ -221,8 +231,8 @@ def run(features_path=None, labels_path=None, out_dir: Path | None = None, model
         "label_version": str(merged["label_version"].iloc[0]) if "label_version" in merged else None,
         "scenario_id": str(merged["scenario_id"].iloc[0]) if "scenario_id" in merged else None,
         "observed_through": observed_through.isoformat(),
-        "inputs": {"features": str(features_path), "features_sha256": _sha256(features_path),
-                   "labels": str(labels_path), "labels_sha256": _sha256(labels_path)},
+        "inputs": {"features": _artifact_path(features_path), "features_sha256": _sha256(features_path),
+                   "labels": _artifact_path(labels_path), "labels_sha256": _sha256(labels_path)},
         "environment": {"python": platform.python_version(), "sklearn": sklearn.__version__,
                         "pandas": pd.__version__, "numpy": np.__version__},
         "split_version": plan.version, "primary_feature_set": primary_set, "features": feats,
@@ -252,7 +262,7 @@ def run(features_path=None, labels_path=None, out_dir: Path | None = None, model
         "dataset_notice": notice, "created_utc": t0.isoformat(), "sklearn": sklearn.__version__,
     }, model_path)
     (out_dir / "model_meta.json").write_text(json.dumps({
-        "model_version": model_version, "path": str(model_path), "sha256": _sha256(model_path),
+        "model_version": model_version, "path": _artifact_path(model_path), "sha256": _sha256(model_path),
         "features": feats, "threshold": t_choice, "split_version": plan.version}, indent=2, default=_json),
         encoding="utf-8")
     if label_task == "ghost_vs_active" and visitor_disjoint:

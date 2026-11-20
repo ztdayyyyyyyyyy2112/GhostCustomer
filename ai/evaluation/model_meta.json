@@ -1,7 +1,7 @@
 {
   "model_version": "ghost-xgboost-cal-27f274df",
-  "path": "ai/models/ghost_model.joblib (not in Git; share privately)",
-  "sha256": "fc623941569b45e0da32a8fd3462b328e0b1761a6b73ab94fb8448d344543da3",
+  "path": "ai/models/ghost_model.joblib",
+  "sha256": "9203bf90b4bdd825a743d329d2537cfcdeed1558f301ee2fb31d473920be5f80",
   "features": [
     "feature_sessions_1w",
     "feature_sessions_2w",

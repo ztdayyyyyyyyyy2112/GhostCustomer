@@ -1,0 +1,8 @@
+# Tested Windows environment for the real-data defense demo.
+-r backend/requirements.txt
+-r ai/requirements-defense.txt
+statsmodels==0.15.0
+scikit-learn==1.9.1
+fastapi==0.165.0
+uvicorn==0.54.0
+httpx==0.28.1

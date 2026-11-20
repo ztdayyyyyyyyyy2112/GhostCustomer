@@ -1,38 +1,47 @@
-# Runbook for Ghost Customer Prediction
+# Local real-data runbook for Ghost Customer Prediction
 
-## Current state
+## What this build demonstrates
 
-The Next.js frontend and FastAPI backend can run together. The backend returns empty/unavailable states by default; `ENABLE_DEMO_FIXTURES=1` provides visibly labeled illustrative data. The approved processed dataset, statistical results, forecast, and real inference runtime are still required from their owners. The full-report introduction and methods are a pre-data draft, not findings. Do not use mock scores or screens as evidence of model performance.
+The 20 November 2026 rebuild from the pinned Retailrocket `events.csv` produced 97,489 visitor snapshots, 97,489 local detail files, exploratory statistics, regression outputs, a 12-week rate series with a naive forecast, and a trained model. The seven FastAPI routes passed `python -m scripts.verify_real_demo` with real artifacts. This is a course research prototype under the **proposed** 4+2+2 cohort and operational Ghost label. It is not validated churn detection. The raw dataset, customer-level processed files, and binary model are ignored by Git and must be regenerated on the demo machine.
 
-## Start the frontend on a fresh machine
+## Prepare one demo machine
 
-Use Node.js 24 and npm. Clone the repository, then from its root:
+1. Clone the repository and use Python 3.12 or newer and Node.js 24. Download Retailrocket Kaggle dataset version 2 from <https://www.kaggle.com/datasets/retailrocket/ecommerce-dataset>. Place only `events.csv` at `data/raw/events.csv`. Do not commit it. The pipeline verifies the pinned 94,237,913-byte file and SHA-256 `3745aa83238b1e6d44d8fda209807899f420084398f94ddf745f3cbcfecbf9e7` before processing.
+2. Create and activate a virtual environment, then run from the repository root:
 
-```bash
-cd frontend
-npm ci
-```
+   ```powershell
+   python -m venv .venv
+   .\.venv\Scripts\Activate.ps1
+   python -m pip install -r requirements-defense.txt
+   python -m scripts.prepare_real_demo
+   ```
 
-Copy `.env.example` to `.env.local` (`Copy-Item .env.example .env.local` in PowerShell). Keep `NEXT_PUBLIC_API_MODE=mock`, then run `npm run dev` and open <http://localhost:3000>. Check `/dashboard`, `/customers`, `/customers/C001`, `/statistics`, `/forecast`, `/predict`, and `/models`. The mock C001 prediction is illustrative; C005 should report insufficient data.
+   The orchestrator runs the data pipeline, sensitivity and detail export, inferential analysis, forecast, OLS and logistic regressions, AI training, Decision Tree and Gaussian NB on the shared split, structural checks, and real API smoke. It writes only aggregate research results to tracked files. Use `--from-processed` to rerun the analysis and model when the verified processed files already exist locally.
+3. Start FastAPI from the repository root in a separate terminal:
 
-## Quality checks
+   ```powershell
+   .\.venv\Scripts\python.exe -m uvicorn backend.app.main:app --port 8000
+   ```
 
-From `frontend/`, run `npm run lint` and `npm run build`. GitHub Actions runs both checks for frontend changes in pull requests to `develop` or `main`. A successful frontend build does not validate backend responses or research results.
+   Leave `ENABLE_DEMO_FIXTURES` unset. Check <http://localhost:8000/docs> and run `python -m scripts.verify_real_demo` after any artifact change.
+4. Copy `frontend/.env.example` to `frontend/.env.local` and set `NEXT_PUBLIC_API_MODE=real` and `NEXT_PUBLIC_API_URL=http://localhost:8000`. From `frontend/`, run `npm ci`, `npm run lint`, `npm run build`, then `npm run dev`. Open <http://localhost:3000/dashboard>. Restart/rebuild the frontend after changing `NEXT_PUBLIC_*` values.
 
-## Connect the real backend
+## Defense flow and facts to keep distinct
 
-1. Agree on `docs/api_contract.md` with the data, backend, and AI owners. The current contract is a draft; record accepted schema changes in a PR.
-2. Start the backend using `backend/README.md`. Confirm `/docs` and the seven `/api` endpoints. Artifact paths and the model runtime interface are in `docs/integration_handoff.md`.
-3. In `frontend/.env.local`, set `NEXT_PUBLIC_API_MODE=real` and `NEXT_PUBLIC_API_URL=http://localhost:8000`. Restart the development server after changing `NEXT_PUBLIC_*` values. For a production deployment, set these values before `npm run build` and rebuild when they change because client-side public values are embedded in the bundle.
-4. Run the cases in `docs/integration_test.md`. Check the browser console, server logs, response shapes, 404/422/503 behavior, CORS, pagination, and null values.
-5. Compare every published metric, plot, model version, and sample count with the reproducible notebook or result file. Keep unavailable sections empty rather than substituting mock data.
+Go through Overview, Customers, one customer timeline, Statistics, Forecast, Prediction, and Model Metrics. Choose a Ghost row from the customer list for the prediction example and keep its dated snapshot. Show an unknown ID or invalid date as the error case. The interface also has a mock mode for UI development; it must be introduced as illustrative if used.
 
-## Data and research handoff
+- The overview includes all 97,489 history-eligible snapshots, including repeated visitors and censored rows. Its `ghost_rate` uses all displayed snapshots as denominator. It is not the same population as the prediction task.
+- The inferential test uses one latest mature snapshot per visitor and compares Ghost with Active. The OLS outcome is future sessions per week and includes all mature label statuses. The logistic analysis uses Ghost versus the other mature statuses. The AI classifier uses Ghost versus Active and a separate purged visitor/time split. Do not compare their prevalence or thresholds as if they shared a denominator.
+- The weekly Ghost-rate forecast has only 12 mature points. Its last-value baseline was checked at three historical origins; ARIMA was not selected. Two future points are shown without intervals. The numerical forecast is exploratory and not evidence of stable long-horizon performance.
+- The served full-feature XGBoost model has test PR-AUC 0.928 on 430 held-out Ghost/Active rows. The stricter observation-only ablation falls to 0.607. Baseline-history dependence is a central result, not a footnote. The 0.05 alert threshold assumes a false negative cost five times a false positive cost and causes the medium/high bands to coincide.
+- SEM has no justified measurement model in the event log. The course outline lists it; obtain lecturer guidance before claiming completion or an approved omission. See `docs/sem_feasibility.md`.
 
-Lâm supplies dataset provenance/license, data dictionary, cohort coverage, label sensitivity, and processed data under `data/processed/`. Large raw and processed files are ignored by Git. Long supplies statistical result tables, forecast output, and FastAPI routes. Kiệt supplies the inference package, held-out model evaluation, calibration, and model card. The leader records decisions in `docs/decision_log.md` before finalizing thresholds or claims.
+Use `research/statistics/results.json`, `research/regression/results/`, `research/forecasting/analysis_manifest.json`, `ai/evaluation/`, and `docs/evidence_register.md` to answer numerical questions. The dashboard is a display of those artifacts, not their source. `docs/demo_script.md` gives the route-by-route spoken walkthrough.
 
-Use only events at or before snapshot T as features. Keep future confirmation events in a separate timeline. Preserve `unknown` when the future horizon is not fully observable. Train/validation/test splits must respect time and repeated visitors. Never treat observational associations as causal evidence.
+## Verification and recovery
 
-## Demo and final handoff
+Run `python -m pytest data/scripts/tests ai/tests research/baselines/tests research/forecasting/tests research/regression/tests backend/tests -q`, `python scripts/check_integration_artifacts.py --require-complete`, and `python -m scripts.verify_real_demo`. From `frontend/`, run `npm run lint` and `npm run build`. If the model is missing, regenerate it with `python -m ai.training.run --optional-models` and `python -m ai.evaluation.report` after installing `requirements-defense.txt`; check its SHA-256 against `ai/evaluation/model_meta.json`. If processed files change, rerun `python -m scripts.prepare_real_demo --from-processed` so the hashes, results and model agree.
 
-The demo path is Overview → Customer List → Customer Detail → Statistical Insights → Forecast → Prediction → Model Metrics. In mock mode, introduce it as a technical interface demo. For the final demo, use `real` mode and verify all numbers against result files. Check the final report, IEEE paper, slides, video, source code, evidence screenshots, and links using `docs/submission_checklist.md`.
+Review drafts are at `reports/full-report/defense_report_draft.docx` (9 pages), `reports/ieee-paper/paper_draft.docx` (4 pages, two columns), and `reports/slides/defense_deck.pptx` (12 slides). The Markdown manuscripts and `reports/defense/brief.md` are editable sources for the team. The report and paper are below the required lengths, and the paper is not in the official IEEE template. Do not submit either DOCX unchanged.
+
+The submission still requires an expanded full report, a 7–10-page IEEE-template paper, a narrated demo video, academic integrity screenshots, lecturer decision on SEM, and the course system uploads. Confirm the final repo name against `STAT3013.QXX_GroupYY` using the class and group codes before renaming it.

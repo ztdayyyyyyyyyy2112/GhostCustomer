@@ -1,11 +1,58 @@
 {
-  "note": "Decision Tree and Gaussian NB scripts run by Kiet on the shared split; owners (Thanh, Lam) to confirm.",
+  "note": "Independent Decision Tree and Gaussian NB rerun on the shared real-data split; proposed scientific decisions remain open.",
   "runs": {
     "decision_tree": {
       "algorithm": "DecisionTreeClassifier",
+      "owner": "Ha Nguyen Viet Thanh",
       "input_sha256": "f39af40962be6bb440f32fb63cd8e7ddf116f508ea95d8a35482dc5264df36dd",
       "label_version": "ghost-baseline-ratio-v1-proposed",
       "split_version": "visitor-temporal-v1_tr2015-07-06_va2015-07-27_te2015-08-24_f50-25-25_s3013",
+      "observed_through": "2015-09-14",
+      "feature_names": [
+        "feature_sessions_1w",
+        "feature_sessions_2w",
+        "feature_sessions_4w",
+        "feature_sessions_6w",
+        "feature_views_1w",
+        "feature_views_2w",
+        "feature_views_4w",
+        "feature_views_6w",
+        "feature_carts_1w",
+        "feature_carts_2w",
+        "feature_carts_4w",
+        "feature_carts_6w",
+        "feature_purchases_1w",
+        "feature_purchases_2w",
+        "feature_purchases_4w",
+        "feature_purchases_6w",
+        "feature_events_1w",
+        "feature_events_2w",
+        "feature_events_4w",
+        "feature_events_6w",
+        "feature_active_days_4w",
+        "feature_recency_days",
+        "feature_days_since_last_view",
+        "feature_days_since_last_cart",
+        "feature_days_since_last_purchase",
+        "feature_frequency_events_per_active_week",
+        "feature_baseline_sessions_per_week",
+        "feature_observation_sessions_per_week",
+        "feature_baseline_events_per_week",
+        "feature_observation_events_per_week",
+        "feature_decay_ratio",
+        "feature_decay_ratio_is_null",
+        "feature_eds",
+        "feature_eds_is_null",
+        "feature_slope_sessions_6w",
+        "feature_slope_sessions_6w_is_null",
+        "feature_cart_to_view",
+        "feature_cart_to_view_is_null",
+        "feature_any_purchase_pre",
+        "feature_n_distinct_items_pre",
+        "feature_total_events_pre"
+      ],
+      "excluded_status_counts": {},
+      "selected_on": "validation PR-AUC",
       "hyperparameters": {
         "max_depth": 6,
         "min_samples_leaf": 20,
@@ -79,13 +126,234 @@
             0
           ]
         ]
-      }
+      },
+      "feature_importances": [
+        {
+          "feature": "feature_baseline_sessions_per_week",
+          "importance": 0.8283833141803665
+        },
+        {
+          "feature": "feature_eds",
+          "importance": 0.1022981241125171
+        },
+        {
+          "feature": "feature_views_1w",
+          "importance": 0.020994730106408073
+        },
+        {
+          "feature": "feature_recency_days",
+          "importance": 0.01414712163978535
+        },
+        {
+          "feature": "feature_sessions_2w",
+          "importance": 0.00832311424697438
+        },
+        {
+          "feature": "feature_days_since_last_view",
+          "importance": 0.006137519779859877
+        },
+        {
+          "feature": "feature_cart_to_view",
+          "importance": 0.005914362366230734
+        },
+        {
+          "feature": "feature_decay_ratio",
+          "importance": 0.005078214196624409
+        },
+        {
+          "feature": "feature_total_events_pre",
+          "importance": 0.004968298718069153
+        },
+        {
+          "feature": "feature_events_4w",
+          "importance": 0.0020747255197973865
+        },
+        {
+          "feature": "feature_frequency_events_per_active_week",
+          "importance": 0.0016804751333671906
+        },
+        {
+          "feature": "feature_sessions_1w",
+          "importance": 0.0
+        },
+        {
+          "feature": "feature_sessions_4w",
+          "importance": 0.0
+        },
+        {
+          "feature": "feature_sessions_6w",
+          "importance": 0.0
+        },
+        {
+          "feature": "feature_views_2w",
+          "importance": 0.0
+        },
+        {
+          "feature": "feature_views_4w",
+          "importance": 0.0
+        },
+        {
+          "feature": "feature_views_6w",
+          "importance": 0.0
+        },
+        {
+          "feature": "feature_carts_1w",
+          "importance": 0.0
+        },
+        {
+          "feature": "feature_carts_2w",
+          "importance": 0.0
+        },
+        {
+          "feature": "feature_carts_4w",
+          "importance": 0.0
+        },
+        {
+          "feature": "feature_carts_6w",
+          "importance": 0.0
+        },
+        {
+          "feature": "feature_purchases_1w",
+          "importance": 0.0
+        },
+        {
+          "feature": "feature_purchases_2w",
+          "importance": 0.0
+        },
+        {
+          "feature": "feature_purchases_4w",
+          "importance": 0.0
+        },
+        {
+          "feature": "feature_purchases_6w",
+          "importance": 0.0
+        },
+        {
+          "feature": "feature_events_1w",
+          "importance": 0.0
+        },
+        {
+          "feature": "feature_events_2w",
+          "importance": 0.0
+        },
+        {
+          "feature": "feature_events_6w",
+          "importance": 0.0
+        },
+        {
+          "feature": "feature_active_days_4w",
+          "importance": 0.0
+        },
+        {
+          "feature": "feature_days_since_last_cart",
+          "importance": 0.0
+        },
+        {
+          "feature": "feature_days_since_last_purchase",
+          "importance": 0.0
+        },
+        {
+          "feature": "feature_observation_sessions_per_week",
+          "importance": 0.0
+        },
+        {
+          "feature": "feature_baseline_events_per_week",
+          "importance": 0.0
+        },
+        {
+          "feature": "feature_observation_events_per_week",
+          "importance": 0.0
+        },
+        {
+          "feature": "feature_decay_ratio_is_null",
+          "importance": 0.0
+        },
+        {
+          "feature": "feature_eds_is_null",
+          "importance": 0.0
+        },
+        {
+          "feature": "feature_slope_sessions_6w",
+          "importance": 0.0
+        },
+        {
+          "feature": "feature_slope_sessions_6w_is_null",
+          "importance": 0.0
+        },
+        {
+          "feature": "feature_cart_to_view_is_null",
+          "importance": 0.0
+        },
+        {
+          "feature": "feature_any_purchase_pre",
+          "importance": 0.0
+        },
+        {
+          "feature": "feature_n_distinct_items_pre",
+          "importance": 0.0
+        }
+      ],
+      "notice": "Research benchmark; interpret only with an approved real-data cohort and label."
     },
     "gaussian_nb": {
       "algorithm": "GaussianNB",
+      "owner": "Cao Phan Lam",
       "input_sha256": "f39af40962be6bb440f32fb63cd8e7ddf116f508ea95d8a35482dc5264df36dd",
       "label_version": "ghost-baseline-ratio-v1-proposed",
       "split_version": "visitor-temporal-v1_tr2015-07-06_va2015-07-27_te2015-08-24_f50-25-25_s3013",
+      "observed_through": "2015-09-14",
+      "feature_names": [
+        "feature_sessions_1w",
+        "feature_sessions_2w",
+        "feature_sessions_4w",
+        "feature_sessions_6w",
+        "feature_views_1w",
+        "feature_views_2w",
+        "feature_views_4w",
+        "feature_views_6w",
+        "feature_carts_1w",
+        "feature_carts_2w",
+        "feature_carts_4w",
+        "feature_carts_6w",
+        "feature_purchases_1w",
+        "feature_purchases_2w",
+        "feature_purchases_4w",
+        "feature_purchases_6w",
+        "feature_events_1w",
+        "feature_events_2w",
+        "feature_events_4w",
+        "feature_events_6w",
+        "feature_active_days_4w",
+        "feature_recency_days",
+        "feature_days_since_last_view",
+        "feature_days_since_last_cart",
+        "feature_days_since_last_purchase",
+        "feature_frequency_events_per_active_week",
+        "feature_baseline_sessions_per_week",
+        "feature_observation_sessions_per_week",
+        "feature_baseline_events_per_week",
+        "feature_observation_events_per_week",
+        "feature_decay_ratio",
+        "feature_decay_ratio_is_null",
+        "feature_eds",
+        "feature_eds_is_null",
+        "feature_slope_sessions_6w",
+        "feature_slope_sessions_6w_is_null",
+        "feature_cart_to_view",
+        "feature_cart_to_view_is_null",
+        "feature_any_purchase_pre",
+        "feature_n_distinct_items_pre",
+        "feature_total_events_pre"
+      ],
+      "excluded_status_counts": {},
+      "selected_on": "validation PR-AUC",
+      "smoothing_candidates": [
+        1e-12,
+        1e-10,
+        1e-09,
+        1e-07,
+        1e-05
+      ],
       "hyperparameters": {
         "var_smoothing": 1e-09
       },
@@ -156,7 +424,9 @@
             0
           ]
         ]
-      }
+      },
+      "assumption": "Features are conditionally independent and Gaussian within each class.",
+      "notice": "Research benchmark only. Gaussian and conditional-independence assumptions may fit skewed event counts poorly; interpret only with an approved real-data cohort, label, feature allowlist, and shared temporal split."
     }
   }
 }

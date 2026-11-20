@@ -35,6 +35,9 @@ def test_forbidden_inputs_rejected(bad):
 def test_feature_sets(supervised):
     full = feature_set(supervised, "full")
     no_tc = feature_set(supervised, "no_target_components")
+    observation = feature_set(supervised, "observation_only")
+    assert observation
+    assert all(name.endswith(("_1w", "_2w")) for name in observation)
     assert "feature_max_event_time_utc" not in full and all(c.startswith("feature_") for c in full)
     assert not set(config.TARGET_COMPONENT_FEATURES) & set(no_tc)
     assert feature_set(supervised, "baseline_only") == ["feature_baseline_sessions_per_week"]

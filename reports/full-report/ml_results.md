@@ -1,6 +1,6 @@
 # 8. Machine-learning prediction of Ghost status (RQ3) — results draft
 
-*Owner: Trần Quốc Kiệt. Method: `ml_methods.md`. Every number below is copied from `ai/evaluation/` (run of 17 November 2026, evidence E-07/E-08). The run uses the 4+2+2 window; after the lecturer's feedback the team plans a 4+2+4 rerun. When it lands, regenerate `results_tables.md` and replace the numbers here. Do not mix numbers from the two runs.*
+*Owner: Trần Quốc Kiệt. Method: `ml_methods.md`. Values below come from the 20 November 2026 real-data rerun in `ai/evaluation/` (E-07/E-08). The 4+2+2 window is a proposed setting. A 4+2+4 sensitivity run, if performed, must be reported separately.*
 
 ## 8.1 Data used for modeling
 
@@ -40,7 +40,7 @@ On the same split, run with the owners' scripts:
 | Decision tree (Thành) | 0.927 | 0.973 | 0.629 | 0.963 | 0.761 | 0.080 |
 | Gaussian NB (Lâm) | 0.667 | 0.861 | 0.550 | 0.761 | 0.639 | 0.192 |
 
-These two use a fixed 0.5 threshold; the owners still need to confirm them (E-11).
+These two use a fixed 0.5 threshold. Their independent reruns are saved in `research/baselines/decision_tree_results.json` and `research/baselines/gaussian_nb_results.json` on the same split; scientific review of D-02/D-03/D-05 remains open.
 
 Tree ensembles and boosting are the strongest models. Their test PR-AUC is about 0.93, against 0.80 for the single-feature EDS rule and 0.25 for no skill. The CIs of random forest, XGBoost and the decision tree overlap almost completely, so the data do not separate these three. XGBoost was served because it had the highest validation PR-AUC (0.913), not because it is significantly better on test. Isolation Forest, which ignores labels, barely beats chance. "Unusual" visitors are not the same as Ghost visitors.
 
@@ -72,15 +72,16 @@ The label divides future sessions by the baseline rate, so these features are pa
 |---|---|---|
 | All 41 features | 0.928 | 0.899 |
 | Without baseline rate, decay ratio and EDS (36) | 0.909 | 0.885 |
+| Observation-window counts only (10) | 0.607 | 0.613 |
 | Baseline rate only (1) | 0.666 | 0.492 |
 
-Performance barely changes without the three label components. However, the baseline rate can still be reconstructed from `feature_sessions_6w − feature_sessions_2w`, so this ablation is not a clean test.
+Performance barely changes without the named label components. However, the baseline rate can still be reconstructed from `feature_sessions_6w − feature_sessions_2w`. The additional observation-only test removes all baseline-period counts and keeps only one- and two-week event/session counts. Its PR-AUC falls to about 0.61, showing that baseline history supplies much of the full model's signal.
 
-The results are consistent with **regression to the mean**: visitors with an unusually active baseline are those most likely to fall below half of it afterwards. The high PR-AUC should therefore be read as *"the model recognises who is above their usual level"*, not as evidence of an independent early-warning signal. A stricter ablation without any baseline-period count is planned.
+The results are consistent with **regression to the mean**: visitors with an unusually active baseline are more likely to fall below half of it afterwards. The 0.928 full-model PR-AUC measures prediction of this operational label; it does not establish an equally strong baseline-independent early warning signal. The observation-only PR-AUC of 0.607 is the stricter check.
 
 ## 8.5 Inference service
 
-The selected model (`ghost-xgboost-cal-27f274df`, artifact SHA-256 `fc623941…`) is served by `ai/inference/runtime.py` through `POST /api/predict`. The ID path only reads the pre-T feature row and re-checks `feature_max_event_time_utc < T`. Unknown visitors return 404 and invalid input returns 422. `top_factors` reports the change in score when a feature is set to its training median. This is an association, not a cause.
+The selected model (`ghost-xgboost-cal-27f274df`, current local artifact SHA-256 in `ai/evaluation/model_meta.json`) is served by `ai/inference/runtime.py` through `POST /api/predict`. The ID path only reads the pre-T feature row and re-checks `feature_max_event_time_utc < T`. Unknown visitors return 404 and invalid input returns 422. `top_factors` reports the change in score when a feature is set to its training median. This is an association, not a cause.
 
 ## 8.6 Answer to RQ3 and limitations
 

@@ -6,8 +6,8 @@ export function ForecastChart({ forecast }: { forecast: ForecastResponse }) {
   if (dates.length === 0) return null;
 
   const values = [...forecast.history, ...fitted, ...forecast.predictions, ...forecast.lower_ci, ...forecast.upper_ci].map((point) => point.value);
-  const minimum = Math.min(0, ...values);
-  const maximum = Math.max(1, ...values);
+  const minimum = 0;
+  const maximum = Math.min(1, Math.max(0.05, Math.ceil(Math.max(...values) * 1.2 * 20) / 20));
   const left = 55, right = 775, top = 22, bottom = 270;
   const firstTime = Date.parse(`${dates[0]}T00:00:00Z`);
   const lastTime = Date.parse(`${dates[dates.length - 1]}T00:00:00Z`);
@@ -26,9 +26,9 @@ export function ForecastChart({ forecast }: { forecast: ForecastResponse }) {
   return <figure className="forecast-figure">
     <svg viewBox="0 0 800 320" role="img" aria-label="Biểu đồ tỷ lệ Ghost quan sát, giá trị fitted và dự báo theo thời gian">
       <line x1={left} y1={bottom} x2={right} y2={bottom} stroke="#a5b8bf" />
-      {[0, 0.25, 0.5, 0.75, 1].map((tick) => <g key={tick}><line x1={left} y1={y(tick)} x2={right} y2={y(tick)} stroke="#e5edef" /><text x="45" y={y(tick) + 4} textAnchor="end" fill="#69808b" fontSize="11">{Math.round(tick * 100)}%</text></g>)}
+      {[0, 0.25, 0.5, 0.75, 1].map((fraction) => { const tick = fraction * maximum; return <g key={fraction}><line x1={left} y1={y(tick)} x2={right} y2={y(tick)} stroke="#e5edef" /><text x="45" y={y(tick) + 4} textAnchor="end" fill="#69808b" fontSize="11">{(tick * 100).toFixed(maximum <= 0.1 ? 1 : 0)}%</text></g>; })}
       {ciDates.length > 1 && <polygon points={ciPoints} fill="#d6f1e8" opacity="0.8" />}
-      {split !== null && <g><line x1={split} y1={top} x2={split} y2={bottom} stroke="#8b9ca3" strokeDasharray="5 5" /><text x={split + 5} y="36" fill="#657985" fontSize="10">Train end</text></g>}
+      {split !== null && <g><line x1={split} y1={top} x2={split} y2={bottom} stroke="#8b9ca3" strokeDasharray="5 5" /><text x={split + 5} y="36" fill="#657985" fontSize="10">Cuối quan sát</text></g>}
       {forecast.history.length > 1 && <polyline points={points(forecast.history)} fill="none" stroke="#1f7890" strokeWidth="3" strokeLinejoin="round" />}
       {fitted.length > 1 && <polyline points={points(fitted)} fill="none" stroke="#e3a442" strokeWidth="2" strokeDasharray="6 4" />}
       {forecast.predictions.length > 1 && <polyline points={points(forecast.predictions)} fill="none" stroke="#208b70" strokeWidth="3" strokeLinejoin="round" />}

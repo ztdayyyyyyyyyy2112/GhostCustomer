@@ -1,0 +1,25 @@
+{
+  "data_mode": "real",
+  "source_events_sha256": "3745aa83238b1e6d44d8fda209807899f420084398f94ddf745f3cbcfecbf9e7",
+  "labels_csv_sha256": "f5ff2f33d59a9def9f1aa31d2c6bd56771dd3a435e3a7bca3bc8162cef75b657",
+  "weekly_rates_sha256": "cc97056f220a771f0a184335db95670cb881ad308829281fbe57dee32852d9dd",
+  "forecast_analysis_sha256": "0d7164b42dbd8e1e71bf7fbea37bc2c7debee24f96180a65cd8b3ffc713c2ba2",
+  "api_result_sha256": "f55c9d509db678420501e85a631fb6a7466c6a2a6bb1a3665b2afe0c0b64c627",
+  "n_mature_weeks": 12,
+  "method": "Last mature value (naive)",
+  "test_metrics": {
+    "naive": {
+      "n": 3,
+      "mae": 0.0025541785639219307,
+      "rmse": 0.003278180834279449,
+      "smape_percent": 8.151160813449392
+    },
+    "selected": {
+      "n": 3,
+      "mae": 0.0025541785639219307,
+      "rmse": 0.003278180834279449,
+      "smape_percent": 8.151160813449392
+    }
+  },
+  "decision_status": "Exploratory under proposed 4+2+2 cohort and operational label"
+}

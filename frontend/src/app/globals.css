@@ -226,7 +226,7 @@ h1 { margin: 0; font-size: clamp(30px, 4vw, 46px); letter-spacing: -.04em; line-
   .forecast-metrics { grid-template-columns: 1fr 1fr; }
   .boxplot-row { grid-template-columns: 80px minmax(0, 1fr); }
   .boxplot-scale { padding-left: 90px; }
-  .main-nav { gap: 2px; }
+  .main-nav { gap: 2px; flex-wrap: wrap; overflow-x: visible; white-space: normal; justify-content: center; }
   .main-nav a { font-size: 11px; padding: 7px 8px; }
 }
 

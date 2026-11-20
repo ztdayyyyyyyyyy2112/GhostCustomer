@@ -1,4 +1,4 @@
-**Run:** `ghost-xgboost-cal-27f274df` · split `visitor-temporal-v1_tr2015-07-06_va2015-07-27_te2015-08-24_f50-25-25_s3013` · label task `ghost_vs_active` (label version `ghost-baseline-ratio-v1-proposed`, scenario `b4_o2_c2`) · generated 2026-11-17T13:38:57Z
+**Run:** `ghost-xgboost-cal-27f274df` · split `visitor-temporal-v1_tr2015-07-06_va2015-07-27_te2015-08-24_f50-25-25_s3013` · label task `ghost_vs_active` (label version `ghost-baseline-ratio-v1-proposed`, scenario `b4_o2_c2`) · generated 2026-11-20T05:50:16Z
 
 **Table ML-1. Visitor-aware temporal split.**
 
@@ -39,6 +39,8 @@ No-skill PR-AUC equals test prevalence = 0.253. Rank-only models (SVM, Isolation
 | full | logistic_regression | 41 | 0.884 | 0.899 | 0.955 |
 | no_target_components | xgboost | 36 | 0.910 | 0.909 | 0.963 |
 | no_target_components | logistic_regression | 36 | 0.877 | 0.885 | 0.945 |
+| observation_only | xgboost | 10 | 0.618 | 0.607 | 0.749 |
+| observation_only | logistic_regression | 10 | 0.558 | 0.613 | 0.737 |
 | baseline_only | xgboost | 1 | 0.654 | 0.666 | 0.906 |
 | baseline_only | logistic_regression | 1 | 0.516 | 0.492 | 0.847 |
 
