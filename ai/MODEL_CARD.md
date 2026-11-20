@@ -1,6 +1,6 @@
 # Model card — Ghost Customer risk score
 
-Status: **pipeline implemented and tested on synthetic data; no real-data result is approved yet.** Fill the "Run" section from `ai/evaluation/run_summary.json` after a real run. Do not edit numbers by hand.
+Status: **first real-data run (17 Nov 2026) on the 4+2+2 window; label and split decisions (D-02, D-03, D-05) are still proposals.** The table below is copied from `ai/evaluation/run_summary.json`; rerun and update it rather than editing numbers by hand. A 4+2+4 rerun is planned after lecturer feedback that 2 weeks is short (see `ai/evaluation/window_study/` on that branch).
 
 ## Intended use
 
@@ -26,16 +26,22 @@ Status: **pipeline implemented and tested on synthetic data; no real-data result
 
 | Field | Value |
 |---|---|
-| model_version | _pending real run_ |
-| split_version | _pending_ |
-| input SHA-256 (features / labels) | _pending_ |
-| test support / prevalence | _pending_ |
-| test PR-AUC [95 % CI] vs no-skill | _pending_ |
-| test ROC-AUC, Brier, ECE | _pending_ |
-| operating threshold, precision, recall | _pending_ |
-| ablation without target-component features | _pending_ |
+| model_version | `ghost-xgboost-cal-27f274df` (XGBoost, max_depth 3, min_child_weight 10, Platt-calibrated) |
+| scenario / label | `b4_o2_c2`, `ghost-baseline-ratio-v1-proposed`, θ = 0.5, task ghost vs active |
+| split_version | `visitor-temporal-v1_tr2015-07-06_va2015-07-27_te2015-08-24_f50-25-25_s3013` |
+| rows (train / validation / test) | 2,214 / 454 / 430 (Ghost 433 / 119 / 109) |
+| input SHA-256 (features / labels) | `60a70a8a…7516a` / `7d22c1de…2d59d7` (match Lâm's 14 Nov manifest) |
+| model artifact SHA-256 | `fc623941…543da3` (`ai/models/ghost_model.joblib`, shared privately) |
+| test support / prevalence | 430 / 0.253 (no-skill PR-AUC 0.253) |
+| test PR-AUC [95 % CI] | 0.928 [0.887, 0.958] (visitor bootstrap, 500 resamples); EDS rule 0.802 [0.731, 0.863] |
+| test ROC-AUC, Brier, ECE | 0.970, 0.059, 0.042 |
+| operating threshold, precision, recall | 0.05 (validation min-cost, C_FN = 5, C_FP = 1); precision 0.596, recall 1.000; 43 % of rows alerted |
+| ablation without target-component features | XGBoost test PR-AUC 0.909, logistic 0.885; baseline rate alone 0.666 |
 
 ## Known limitations
+
+- **The score mostly reflects the baseline level (regression to the mean).** Baseline sessions/week and decay ratio dominate SHAP and permutation importance. Visitors with an unusually busy baseline are the ones whose next weeks fall below half of it. The `no_target_components` ablation still scores 0.909 because the baseline rate can be rebuilt from `feature_sessions_6w − feature_sessions_2w`; a stricter ablation is pending.
+- **Risk bands collapse at this threshold.** The cost rule picks 0.05, so `high` and `medium` coincide and 43 % of test rows are alerted; revisit the cost ratio or bands before the demo.
 
 - **Operational proxy label.** "Ghost" is a rule over session counts, not observed churn or intent. Results change with θ, the windows, and the session gap (see E-02).
 - **Circularity.** The label divides future sessions by `feature_baseline_sessions_per_week`, which is also an input. `feature_decay_ratio` and `feature_eds` are derived from the same rate. Predictive claims should cite the `no_target_components` ablation.

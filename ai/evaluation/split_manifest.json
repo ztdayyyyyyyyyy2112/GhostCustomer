@@ -1,0 +1,100 @@
+{
+  "split_version": "visitor-temporal-v1_tr2015-07-06_va2015-07-27_te2015-08-24_f50-25-25_s3013",
+  "plan": {
+    "train_end": "2015-07-06",
+    "val_start": "2015-07-27",
+    "val_end": "2015-08-03",
+    "test_start": "2015-08-24",
+    "test_end": "2015-08-31",
+    "visitor_fractions": [
+      0.5,
+      0.25,
+      0.25
+    ],
+    "seed": 3013,
+    "version": "visitor-temporal-v1_tr2015-07-06_va2015-07-27_te2015-08-24_f50-25-25_s3013",
+    "visitor_disjoint": true
+  },
+  "label_task": "ghost_vs_active",
+  "features": [
+    "feature_sessions_1w",
+    "feature_sessions_2w",
+    "feature_sessions_4w",
+    "feature_sessions_6w",
+    "feature_views_1w",
+    "feature_views_2w",
+    "feature_views_4w",
+    "feature_views_6w",
+    "feature_carts_1w",
+    "feature_carts_2w",
+    "feature_carts_4w",
+    "feature_carts_6w",
+    "feature_purchases_1w",
+    "feature_purchases_2w",
+    "feature_purchases_4w",
+    "feature_purchases_6w",
+    "feature_events_1w",
+    "feature_events_2w",
+    "feature_events_4w",
+    "feature_events_6w",
+    "feature_active_days_4w",
+    "feature_recency_days",
+    "feature_days_since_last_view",
+    "feature_days_since_last_cart",
+    "feature_days_since_last_purchase",
+    "feature_frequency_events_per_active_week",
+    "feature_baseline_sessions_per_week",
+    "feature_observation_sessions_per_week",
+    "feature_baseline_events_per_week",
+    "feature_observation_events_per_week",
+    "feature_decay_ratio",
+    "feature_decay_ratio_is_null",
+    "feature_eds",
+    "feature_eds_is_null",
+    "feature_slope_sessions_6w",
+    "feature_slope_sessions_6w_is_null",
+    "feature_cart_to_view",
+    "feature_cart_to_view_is_null",
+    "feature_any_purchase_pre",
+    "feature_n_distinct_items_pre",
+    "feature_total_events_pre"
+  ],
+  "supervised_rows": 11882,
+  "rows_used": 3098,
+  "rows_dropped_by_purge_or_bucket": 8784,
+  "splits": {
+    "train": {
+      "rows": 2214,
+      "visitors": 1271,
+      "positives": 433,
+      "prevalence": 0.1956,
+      "snapshot_min": "2015-06-15",
+      "snapshot_max": "2015-07-06",
+      "label_end_max": "2015-07-20"
+    },
+    "validation": {
+      "rows": 454,
+      "visitors": 340,
+      "positives": 119,
+      "prevalence": 0.2621,
+      "snapshot_min": "2015-07-27",
+      "snapshot_max": "2015-08-03",
+      "label_end_max": "2015-08-17"
+    },
+    "test": {
+      "rows": 430,
+      "visitors": 326,
+      "positives": 109,
+      "prevalence": 0.2535,
+      "snapshot_min": "2015-08-24",
+      "snapshot_max": "2015-08-31",
+      "label_end_max": "2015-09-14"
+    }
+  },
+  "assignment_sha256": "1ac1909fefbf8b653d7fa1177dff2bd351eaaa64afa18b12381bc68ee594011d",
+  "rules": [
+    "time-ordered periods; test = last mature weeks",
+    "strict purge: earlier label_end < next split's first snapshot",
+    "visitor hashed into one bucket; bucket contributes only within its period"
+  ]
+}
