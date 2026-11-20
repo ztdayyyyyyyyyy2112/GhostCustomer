@@ -3,5 +3,7 @@ full,xgboost,41,0.9126,0.928,0.9702
 full,logistic_regression,41,0.8838,0.8988,0.9547
 no_target_components,xgboost,36,0.9098,0.9089,0.9632
 no_target_components,logistic_regression,36,0.8774,0.8852,0.9447
+observation_only,xgboost,10,0.6177,0.6072,0.7492
+observation_only,logistic_regression,10,0.5584,0.6128,0.7373
 baseline_only,xgboost,1,0.6539,0.6657,0.9056
 baseline_only,logistic_regression,1,0.5163,0.492,0.8465

@@ -1905,13 +1905,49 @@
       ]
     }
   ],
-  "estimates": [],
-  "tests": [],
-  "p_values": [],
-  "cis": [],
-  "assumptions": [
-    "Descriptive statistics only; no hypothesis tests or confidence intervals.",
-    "Rows are repeated visitor snapshots and are not independent."
+  "estimates": [
+    {
+      "name": "Ghost share among mature Ghost/Active visitors",
+      "n": 1267,
+      "estimate": 0.292817679558011,
+      "ci_low": 0.2684172908902028,
+      "ci_high": 0.3184705963784534,
+      "method": "Wilson 95% binomial interval; one latest snapshot per visitor",
+      "unit": "proportion"
+    }
   ],
-  "dataset_notice": "Descriptive Retailrocket output; proposed cohort and label, not approved findings"
+  "tests": [
+    {
+      "name": "Pre-snapshot recency: ghost minus active",
+      "hypothesis": "H0: mean pre-snapshot recency is equal in the two operational-label groups; H1: it differs.",
+      "n": 1267,
+      "statistic": 20.019859847176647,
+      "p_value": 7.521122464348876e-63,
+      "effect_size": 1.70667911774769,
+      "ci_low": 10.274159114700371,
+      "ci_high": 12.511430515944138,
+      "method": "Two-sided Welch t test; 95% Welch CI for mean difference; Cohen d effect size",
+      "assumptions": [
+        "One latest mature snapshot per visitor",
+        "Independent visitors are assumed",
+        "Skew and selection bias may limit the mean-based interpretation",
+        "Observational association only; proposed label"
+      ]
+    }
+  ],
+  "p_values": [
+    7.521122464348876e-63
+  ],
+  "cis": [
+    {
+      "low": 10.274159114700371,
+      "high": 12.511430515944138
+    }
+  ],
+  "assumptions": [
+    "Inferential rows contain one latest mature snapshot per visitor; descriptive groups retain repeated snapshots.",
+    "Ghost and active are operational labels under the proposed 4+2+2 configuration, not externally validated churn.",
+    "The test is exploratory and does not establish causation or model performance."
+  ],
+  "dataset_notice": "Retailrocket exploratory statistics; proposed cohort/label, not approved final findings"
 }

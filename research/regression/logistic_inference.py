@@ -1,5 +1,6 @@
 """Reproducible OLS/logit inference and temporal evaluation; no causal claims."""
 import argparse
+import hashlib
 import json
 from pathlib import Path
 import numpy as np
@@ -25,11 +26,15 @@ def save_json(path,obj):path.write_text(json.dumps(clean_json(obj),indent=2,allo
 
 def split_time(df):
     dates=sorted(df.snapshot_date.unique())
-    if len(dates)<5:raise ValueError('Need at least five snapshot dates for temporal train/validation/test')
-    train_cut=dates[max(1,int(len(dates)*.6))-1];val_cut=dates[max(2,int(len(dates)*.8))-1]
-    train=df[(df.snapshot_date<=train_cut)&(df.label_end<=train_cut)].copy()
-    val=df[(df.snapshot_date>train_cut)&(df.snapshot_date<=val_cut)&(df.label_end<=val_cut)].copy()
-    test=df[df.snapshot_date>val_cut].copy()
+    if len(dates)<8:raise ValueError('Need at least eight snapshot dates for purged temporal train/validation/test')
+    val_start=dates[max(3,int(len(dates)*.5))]
+    test_start=dates[max(6,int(len(dates)*.75))]
+    if val_start>=test_start:raise ValueError('No validation window between train and test')
+    # A label may be used only if its entire confirmation window ended before
+    # the next partition starts. This allows a two-week horizon with short data.
+    train=df[(df.snapshot_date<val_start)&(df.label_end<val_start)].copy()
+    val=df[(df.snapshot_date>=val_start)&(df.snapshot_date<test_start)&(df.label_end<test_start)].copy()
+    test=df[df.snapshot_date>=test_start].copy()
     if min(map(len,[train,val,test]))<20:raise ValueError('Insufficient samples after label-overlap purging')
     # Conservative evaluation: remove users present in an earlier partition.
     val=val[~val.visitorid.isin(train.visitorid)]
@@ -105,6 +110,9 @@ def run(source, outdir, observed_through, mode):
     calibration["bin"] = pd.cut(calibration.p, np.linspace(0, 1, 6), include_lowest=True)
     bins = calibration.groupby("bin", observed=True).agg(n=("y", "size"), mean_predicted=("p", "mean"), observed_rate=("y", "mean"))
     result = {"data_mode": mode, "observed_through": str(end), "covariance": cov["cov_type"],
+              "input_sha256": hashlib.sha256(Path(source).read_bytes()).hexdigest(),
+              "label_task": "ghost_vs_rest among mature snapshots; inactive and recovered are negative",
+              "decision_status": "Exploratory result under proposed 4+2+2 cohort/label and purged temporal split",
               "eligible_rows": len(eligible), "excluded_rows": len(data)-len(eligible),
               "split": {name: {"n": len(part), "positive": int(part.target_ghost.sum()),
                                "first_snapshot": str(part.snapshot_date.min()), "last_label_end": str(part.label_end.max())}

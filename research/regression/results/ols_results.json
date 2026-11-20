@@ -1,0 +1,104 @@
+{
+  "schema_version": "ols-v1",
+  "data_mode": "real",
+  "input_sha256": "998d698b777c35d44c3df1144d016986ec02cdaab2ebfa0a69fc89869a1ab4d9",
+  "outcome": "next_engagement",
+  "outcome_definition": "future sessions per week over the 2-week confirmation horizon",
+  "split": {
+    "input_rows": 85899,
+    "immature_rows_excluded": 0,
+    "training_rows": 43536,
+    "training_visitors": 15689,
+    "test_rows": 17368,
+    "test_repeat_visitors_excluded": 2983,
+    "train_max_outcome_end": "2015-08-03T00:00:00+00:00",
+    "test_min_snapshot": "2015-08-17T00:00:00+00:00",
+    "policy": "Chronological split with mature outcomes; test visitors absent from training"
+  },
+  "models": {
+    "simple": {
+      "predictors": [
+        "feature_sessions_4w"
+      ],
+      "coefficients": [
+        {
+          "term": "const",
+          "coefficient": -0.19828138756436195,
+          "ci_low": -0.25578612852468835,
+          "ci_high": -0.14077664660403555,
+          "p_value": 1.397863762380094e-11
+        },
+        {
+          "term": "feature_sessions_4w",
+          "coefficient": 0.1323911384683548,
+          "ci_low": 0.11450634272097979,
+          "ci_high": 0.1502759342157298,
+          "p_value": 1.0700910844379441e-47
+        }
+      ],
+      "n_train": 43536,
+      "n_test": 17368,
+      "r_squared": 0.35388645687056575,
+      "adjusted_r_squared": 0.3538716152859852,
+      "test_mae": 0.3590184484796045,
+      "test_rmse": 0.8711937905061525,
+      "test_negative_predictions": 5928,
+      "covariance": "cluster"
+    },
+    "multiple": {
+      "predictors": [
+        "feature_sessions_4w",
+        "feature_views_4w",
+        "feature_recency_days"
+      ],
+      "coefficients": [
+        {
+          "term": "const",
+          "coefficient": -0.16894127421809335,
+          "ci_low": -0.2819497670720079,
+          "ci_high": -0.055932781364178785,
+          "p_value": 0.003389240818455726
+        },
+        {
+          "term": "feature_sessions_4w",
+          "coefficient": 0.12723209849347886,
+          "ci_low": 0.10621359093019644,
+          "ci_high": 0.14825060605676127,
+          "p_value": 1.8136685739645773e-32
+        },
+        {
+          "term": "feature_views_4w",
+          "coefficient": 0.0011029381887063857,
+          "ci_low": -0.001042971015153582,
+          "ci_high": 0.0032488473925663536,
+          "p_value": 0.31375821737935905
+        },
+        {
+          "term": "feature_recency_days",
+          "coefficient": -0.0013990370934466546,
+          "ci_low": -0.004630037711744115,
+          "ci_high": 0.0018319635248508063,
+          "p_value": 0.3960633898426773
+        }
+      ],
+      "n_train": 43536,
+      "n_test": 17368,
+      "r_squared": 0.35487644703037513,
+      "adjusted_r_squared": 0.35483198845601815,
+      "test_mae": 0.3608862667769138,
+      "test_rmse": 0.8702714864030988,
+      "test_negative_predictions": 5927,
+      "covariance": "cluster"
+    }
+  },
+  "assumptions": [
+    "Correct linear conditional mean",
+    "Pre-T predictors only",
+    "HC3 for unique users, clustered covariance for repeated users"
+  ],
+  "limitations": [
+    "Conditional associations, not causal effects",
+    "Real diagnostics and decision D-05 require team review",
+    "For a count response, assess count-model alternatives"
+  ]
+}

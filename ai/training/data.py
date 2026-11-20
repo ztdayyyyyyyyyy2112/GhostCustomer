@@ -72,6 +72,8 @@ def feature_set(df: pd.DataFrame, name: str = config.PRIMARY_FEATURE_SET) -> lis
         chosen = cols
     elif name == "no_target_components":
         chosen = [c for c in cols if c not in config.TARGET_COMPONENT_FEATURES]
+    elif name == "observation_only":
+        chosen = [c for c in config.OBSERVATION_ONLY_FEATURES if c in cols]
     elif name == "baseline_only":
         chosen = [c for c in ["feature_baseline_sessions_per_week"] if c in cols]
     else:

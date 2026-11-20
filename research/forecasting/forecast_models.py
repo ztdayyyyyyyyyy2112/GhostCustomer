@@ -30,7 +30,8 @@ def arima_fit(series,order):
 def forecast_at(d,target,order=None):
     # Forecast is issued at target week's start; only labels matured strictly before it are available.
     known=d[(d.label_end<target)&(d.week_start<target)]
-    if len(known)<12:raise ValueError('Too few mature observations at forecast origin')
+    minimum = 12 if order is not None else 6
+    if len(known)<minimum:raise ValueError('Too few mature observations at forecast origin')
     if not known.week_start.diff().dropna().eq(pd.Timedelta(days=7)).all():raise ValueError('Mature history has gaps')
     steps=int((target-known.week_start.iloc[-1]).days//7)
     if steps<1:raise ValueError('Target must be after available history')
@@ -39,6 +40,7 @@ def forecast_at(d,target,order=None):
     return float(np.clip(np.asarray(f.predicted_mean)[-1],0,1)),float(np.clip(ci[0],0,1)),float(np.clip(ci[1],0,1)),fit
 
 def run(rates_path,outdir,observed_through,mode='real',horizon=4):
+    if horizon < 1 or horizon > 4:raise ValueError('Forecast horizon must be 1 to 4 weeks')
     outdir=Path(outdir);outdir.mkdir(parents=True,exist_ok=True);d=pd.read_csv(rates_path)
     if not set(d.columns)>={'week_start','label_end','ghost_count','eligible_count'}:raise ValueError('Rates schema mismatch')
     d.week_start=pd.to_datetime(d.week_start,utc=True);d.label_end=pd.to_datetime(d.label_end,utc=True)
@@ -53,7 +55,7 @@ def run(rates_path,outdir,observed_through,mode='real',horizon=4):
     d=d[d.label_end<=end].copy();d['rate']=d.ghost_count/d.eligible_count
     if not d.week_start.diff().dropna().eq(pd.Timedelta(days=7)).all():raise ValueError('Weekly gaps: do not silently interpolate rates')
     d.to_csv(outdir/'weekly_rates_mature.csv',index=False)
-    if len(d)<20 or (d.label_end < d.week_start.iloc[int(len(d)*.8)]).sum()<12:
+    if len(d)<10 or (d.label_end < d.week_start.iloc[int(len(d)*.8)]).sum()<6:
         payload={'data_mode':mode,'available':False,'reason':'Insufficient mature weekly bins or available history at the first test origin','n_weeks':len(d)}
         save_json(outdir/'forecast.json',payload);return payload
     split1=int(len(d)*.6);split2=int(len(d)*.8)
@@ -114,7 +116,7 @@ def run(rates_path,outdir,observed_through,mode='real',horizon=4):
              'availability_policy':'Backtest origin=target week start; history label_end must be strictly earlier. Label-delay gaps are bridged.',
              'history':[{'week_start':r.week_start.strftime('%Y-%m-%d'),'rate':r.rate} for r in d.itertuples()],
              'predictions':forecasts,'test_metrics':model_metrics,'validation_candidates':comparisons,'test_fallback_origins':fallback_origins,'diagnostics':diagnostics,
-             'limitations':['ARIMA bounds clipped to [0,1]; approximate intervals','Repeated visitors across weeks may induce dependence','Synthetic series exercises code only'] if mode=='demo' else ['Approximate clipped ARIMA intervals','Operational labels and finite horizon; verify weekly denominators']}
+             'limitations':['ARIMA bounds clipped to [0,1]; approximate intervals','Repeated visitors across weeks may induce dependence','Synthetic series exercises code only'] if mode=='demo' else ['Approximate clipped ARIMA intervals','Operational labels and finite horizon; verify weekly denominators', 'Short series: the naive holdout has very few weekly origins and no interval when ARIMA is unsupported']}
     save_json(outdir/'forecast.json',payload)
     pd.DataFrame(forecasts).to_csv(outdir/'forecast.csv', index=False)
     api = {
@@ -122,7 +124,7 @@ def run(rates_path,outdir,observed_through,mode='real',horizon=4):
         'predictions': [{'date': row['week_start'], 'value': row['rate']} for row in forecasts],
         'lower_ci': [{'date': row['week_start'], 'value': row['lower_ci']} for row in forecasts if row['lower_ci'] is not None],
         'upper_ci': [{'date': row['week_start'], 'value': row['upper_ci']} for row in forecasts if row['upper_ci'] is not None],
-        'dataset_notice': f'{mode.upper()} | weekly operational ghost rate',
+        'dataset_notice': f'{mode.upper()} | Retailrocket weekly operational ghost rate; proposed 4+2+2 cohort/label, exploratory forecast',
         'method': payload['method'], 'unit': 'week', 'series_length': len(d),
         'train_end': d.week_start.iloc[-1].strftime('%Y-%m-%d'),
     }
@@ -138,4 +140,5 @@ def run(rates_path,outdir,observed_through,mode='real',horizon=4):
 
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--rates',required=True);p.add_argument('--outdir',required=True);p.add_argument('--observed-through',required=True);p.add_argument('--mode',choices=['demo','real'],required=True)
-    a=p.parse_args();run(a.rates,a.outdir,a.observed_through,a.mode)
+    p.add_argument('--horizon',type=int,default=4,help='Future weekly points; use a short horizon for a short series')
+    a=p.parse_args();run(a.rates,a.outdir,a.observed_through,a.mode,a.horizon)

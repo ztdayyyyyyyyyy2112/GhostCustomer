@@ -4,7 +4,18 @@ STAT3013 project: early detection of silent customer disengagement in e-commerce
 
 ## Current status
 
-The frontend runs with **illustrative mock data** or connected to the FastAPI backend. The dataset, cohort rules, label thresholds, statistical estimates, and trained model are not finalized. The real-data file and inference interface is documented in `docs/integration_handoff.md`. Do not present mock values as research results.
+The repository now contains a reproducible **local real-data demo**: data pipeline, descriptive and inferential statistics, OLS and logistic regression, a short-series naive forecast, model evaluation, saved-model inference, seven API routes, and a Next.js dashboard. On 20 November 2026 the integrated real-data check passed locally. Raw/processed visitor data and the trained model stay out of Git, so a new machine must rebuild them. The 4+2+2 cohort and Ghost label remain proposed research decisions; see `docs/decision_log.md` and the observation-only ablation before making performance claims.
+
+## Rebuild the real-data demo
+
+Save the Retailrocket Kaggle v2 `events.csv` at `data/raw/events.csv`. Its SHA-256 must match `data/config/pipeline.json`. In a Python 3.12+ virtual environment, from the repository root:
+
+```bash
+python -m pip install -r requirements-defense.txt
+python -m scripts.prepare_real_demo
+```
+
+This command rebuilds the ignored processed tables and model, tracked aggregate research results, and then checks all seven real API routes. It takes several minutes. With already verified processed tables, use `python -m scripts.prepare_real_demo --from-processed`. See `docs/runbook.md` for the exact study limitations and frontend setup.
 
 ## Run the frontend
 
@@ -40,7 +51,7 @@ Check the status and shape of research handoff files without modifying them:
 python scripts/check_integration_artifacts.py
 ```
 
-Once all owners have delivered their outputs, add `--require-complete` to make missing files fail the check. This does not replace method and evidence review.
+After rebuilding local artifacts, use `--require-complete` to fail on missing files. This checks structure and does not replace scientific review.
 
 Swagger API documentation is available at <http://localhost:8000/docs>. To connect the frontend in real mode, set `NEXT_PUBLIC_API_MODE=real` and `NEXT_PUBLIC_API_URL=http://localhost:8000` in `frontend/.env.local`.
 
@@ -51,10 +62,10 @@ For a full-stack interface check before research outputs arrive, start the backe
 - `frontend/`: Next.js dashboard and shared API client.
 - `backend/`: FastAPI application implementing the contract in `docs/api_contract.md`.
 - `data/`: data scripts, notebooks, and ignored raw/processed files.
-- `ai/`: planned model training and inference.
+- `ai/`: model training, evaluation, saved-model inference and model card.
 - `research/`: statistics, regression, and forecasting work.
 - `docs/`: research scope, decisions, literature map, evidence register, API contract, team handoff, runbook, and submission checks.
-- `reports/`: report draft and writing outlines for the paper and slides. No empirical findings are published yet.
+- `reports/`: report and presentation drafts tied to reproducible evidence; review them before submission.
 
 ## Working agreements
 

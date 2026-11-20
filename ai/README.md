@@ -19,9 +19,11 @@ python -m ai.evaluation.report
 
 Synthetic runs always write to `data/processed/ai_dryrun/` (ignored by Git) and are refused for `ai/evaluation/`, so mock numbers can never reach `/api/model/metrics`.
 
-## Latest real run (17 Nov 2026, window 4+2+2)
+## Latest real run (20 Nov 2026, proposed window 4+2+2)
 
 `ghost-xgboost-cal-27f274df`: test PR-AUC 0.928 [0.887, 0.958] vs EDS rule 0.802 and no-skill 0.254. Outputs are in `ai/evaluation/`, the write-up is in `reports/full-report/ml_results.md`, and the figures are in `ai/evaluation/figures/`. Decision Tree and Gaussian NB on the same split: `ai/evaluation/benchmark_shared_split.json`.
+
+The stricter observation-only ablation reaches test PR-AUC 0.607 with ten one- and two-week features. The full score relies strongly on baseline history; do not describe 0.928 as baseline-independent early warning. For an exact local rerun with XGBoost and SHAP, install `ai/requirements-defense.txt` first. The binary model is ignored by Git and must be regenerated locally.
 
 - **Notebooks** (`ai/notebooks/01_baselines` … `06_shap`) read these outputs; set `RERUN = True` in the first cell to retrain.
 - **API examples for E-08**: on the machine that holds `ai/models/ghost_model.joblib` and `data/processed/customer_features.parquet`, run `python -m ai.inference.examples`. It writes ignored `data/processed/predict_examples.json` (one 200, one 404, one 422). Review it privately; it contains a real visitor ID and score.

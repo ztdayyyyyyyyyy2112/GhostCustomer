@@ -1,0 +1,15 @@
+{
+  "input_pairs": 97489,
+  "mature_ghost_or_active_visitors": 1267,
+  "ghost_visitors": 371,
+  "active_visitors": 896,
+  "recency_n_ghost": 371,
+  "recency_n_active": 896,
+  "ghost_mean_days": 16.537383734463912,
+  "active_mean_days": 5.1445889191416585,
+  "mean_difference_days": 11.392794815322254,
+  "welch_df": 414.04870210012416,
+  "selection": "Latest mature snapshot per visitor, then Ghost/Active comparison; excludes inactive, recovered, candidate and unknown",
+  "features_sha256": "60a70a8ad8a857d1ed364f3f304b95a197a41b7ce0ec82fd3ddec85b0ef7516a",
+  "labels_sha256": "7d22c1de2516ea9374f6ec1275d74c023d19ab0360c54d6be162d4bb3a2e59d7"
+}

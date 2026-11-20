@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import json
+from functools import lru_cache
 from hashlib import sha256
+from pathlib import Path
 from typing import Any
 from fastapi import HTTPException
 from backend.app.config import settings
@@ -58,13 +60,18 @@ def get_overview_data() -> OverviewResponse:
     )
 
 
+@lru_cache(maxsize=2)
+def _read_processed_customers(path: Path, mtime_ns: int, size: int) -> tuple[Customer, ...]:
+    with path.open("r", encoding="utf-8") as source:
+        return tuple(Customer.model_validate(item) for item in json.load(source))
+
+
 def _load_customers_pool() -> list[Customer]:
     processed_customers_file = settings.DATA_PROCESSED_DIR / "customers.json"
     if processed_customers_file.exists():
         try:
-            with open(processed_customers_file, "r", encoding="utf-8") as f:
-                raw_items = json.load(f)
-                return [Customer(**item) for item in raw_items]
+            stat = processed_customers_file.stat()
+            return list(_read_processed_customers(processed_customers_file, stat.st_mtime_ns, stat.st_size))
         except (OSError, ValueError, TypeError) as exc:
             raise HTTPException(status_code=503, detail="Processed customer artifact is invalid") from exc
 

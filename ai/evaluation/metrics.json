@@ -442,6 +442,24 @@
     },
     {
       "name": "ablation:xgboost",
+      "feature_set": "observation_only",
+      "model": "xgboost",
+      "n_features": 10,
+      "val_pr_auc": 0.6177,
+      "test_pr_auc": 0.6072,
+      "test_roc_auc": 0.7492
+    },
+    {
+      "name": "ablation:logistic_regression",
+      "feature_set": "observation_only",
+      "model": "logistic_regression",
+      "n_features": 10,
+      "val_pr_auc": 0.5584,
+      "test_pr_auc": 0.6128,
+      "test_roc_auc": 0.7373
+    },
+    {
+      "name": "ablation:xgboost",
       "feature_set": "baseline_only",
       "model": "xgboost",
       "n_features": 1,

@@ -51,7 +51,12 @@ TARGET_COMPONENT_FEATURES = [
     "feature_decay_ratio", "feature_decay_ratio_is_null",
     "feature_eds", "feature_eds_is_null",
 ]
-FEATURE_SETS = ("full", "no_target_components", "baseline_only")
+OBSERVATION_ONLY_FEATURES = [
+    f"feature_{kind}_{weeks}w"
+    for kind in ("sessions", "views", "carts", "purchases", "events")
+    for weeks in (1, 2)
+]
+FEATURE_SETS = ("full", "no_target_components", "observation_only", "baseline_only")
 PRIMARY_FEATURE_SET = "full"                         # PROPOSED; ablation always reported
 
 # --------------------------------------------------------------------------- split (PROPOSED, D-05)

@@ -1,0 +1,30 @@
+{
+  "data_mode": "real",
+  "training_cutoff": "2015-08-03 00:00:00+00:00",
+  "n": 43536,
+  "covariance": "cluster",
+  "vif": {
+    "feature_sessions_4w": 1.5889910127728715,
+    "feature_views_4w": 1.4129644026869232,
+    "feature_recency_days": 1.151941901485769
+  },
+  "breusch_pagan_p": null,
+  "bp_note": "Omitted for clustered rows",
+  "influence_flags": 1602,
+  "cook_threshold": 9.187798603454613e-05,
+  "baseline_adjusted_r2": 0.3538716152859852,
+  "full_adjusted_r2": 0.35483198845601815,
+  "full_coefficients": {
+    "const": -0.16894127421809335,
+    "feature_sessions_4w": 0.12723209849347886,
+    "feature_views_4w": 0.0011029381887063857,
+    "feature_recency_days": -0.0013990370934466546
+  },
+  "sensitivity_coefficients": {
+    "const": 0.0533594817681014,
+    "feature_sessions_4w": 0.05578214338676048,
+    "feature_views_4w": 0.00030298267011711884,
+    "feature_recency_days": -0.004302962768897948
+  },
+  "interpretation": "Influence flags warrant review. The full fit retains every training row."
+}

@@ -1,0 +1,144 @@
+{
+  "data_mode": "real",
+  "observed_through": "2015-09-14 00:00:00+00:00",
+  "covariance": "cluster",
+  "input_sha256": "4fb2127e175130dffc90c264f3d6f4fc5185c11a79b5ef40c6a47a1733146788",
+  "label_task": "ghost_vs_rest among mature snapshots; inactive and recovered are negative",
+  "decision_status": "Exploratory result under proposed 4+2+2 cohort/label and purged temporal split",
+  "eligible_rows": 85899,
+  "excluded_rows": 11590,
+  "split": {
+    "train": {
+      "n": 29290,
+      "positive": 845,
+      "first_snapshot": "2015-06-15 00:00:00+00:00",
+      "last_label_end": "2015-07-20 00:00:00+00:00"
+    },
+    "validation": {
+      "n": 4709,
+      "positive": 70,
+      "first_snapshot": "2015-07-27 00:00:00+00:00",
+      "last_label_end": "2015-08-10 00:00:00+00:00"
+    },
+    "test": {
+      "n": 15470,
+      "positive": 316,
+      "first_snapshot": "2015-08-17 00:00:00+00:00",
+      "last_label_end": "2015-09-14 00:00:00+00:00"
+    }
+  },
+  "vif": {
+    "sessions": 1.1525963039779128,
+    "recency_days": 1.4026814719288905,
+    "engagement_change": 1.2368455350958858
+  },
+  "coefficients": [
+    {
+      "term": "const",
+      "coefficient": -2.935296623757317,
+      "ci_low": -3.09740235381966,
+      "ci_high": -2.773190893694974,
+      "p_value": 7.099488282728941e-276,
+      "odds_ratio": 0.053114961809948597,
+      "or_ci_low": 0.04516637640450522,
+      "or_ci_high": 0.062462375613353195
+    },
+    {
+      "term": "sessions",
+      "coefficient": 0.03630399633580119,
+      "ci_low": 0.025998708703823765,
+      "ci_high": 0.046609283967778616,
+      "p_value": 5.032318981241852e-12,
+      "odds_ratio": 1.0369710339752367,
+      "or_ci_low": 1.0263396231641555,
+      "or_ci_high": 1.047712570999204
+    },
+    {
+      "term": "recency_days",
+      "coefficient": -0.06922636605628019,
+      "ci_low": -0.0802652150471923,
+      "ci_high": -0.058187517065368066,
+      "p_value": 1.0094084341778238e-34,
+      "odds_ratio": 0.9331154305091796,
+      "or_ci_low": 0.9228715545039451,
+      "or_ci_high": 0.9434730135574998
+    },
+    {
+      "term": "engagement_change",
+      "coefficient": -0.21128166962929576,
+      "ci_low": -0.2593052957784362,
+      "ci_high": -0.1632580434801553,
+      "p_value": 6.5261207767111e-18,
+      "odds_ratio": 0.8095460102398672,
+      "or_ci_low": 0.7715874246984884,
+      "or_ci_high": 0.849371985230815
+    }
+  ],
+  "threshold_policy": "validation F1",
+  "test": {
+    "n": 15470,
+    "positive_support": 316,
+    "prevalence": 0.020426632191338074,
+    "threshold": 0.1,
+    "roc_auc": 0.760670617107402,
+    "pr_auc_average_precision": 0.0964079777592788,
+    "precision": 0.19148936170212766,
+    "recall": 0.056962025316455694,
+    "f1": 0.08780487804878048,
+    "brier": 0.019656510929019298,
+    "confusion_matrix": [
+      [
+        15078,
+        76
+      ],
+      [
+        298,
+        18
+      ]
+    ]
+  },
+  "prevalence_baseline": {
+    "n": 15470,
+    "positive_support": 316,
+    "prevalence": 0.020426632191338074,
+    "threshold": 0.5,
+    "roc_auc": 0.5,
+    "pr_auc_average_precision": 0.020426632191338074,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "brier": 0.020080328523906652,
+    "confusion_matrix": [
+      [
+        15154,
+        0
+      ],
+      [
+        316,
+        0
+      ]
+    ]
+  },
+  "calibration": [
+    {
+      "n": 15449,
+      "mean_predicted": 0.02504701819011101,
+      "observed_rate": 0.020389669234254643
+    },
+    {
+      "n": 15,
+      "mean_predicted": 0.28073400462865633,
+      "observed_rate": 0.06666666666666667
+    },
+    {
+      "n": 3,
+      "mean_predicted": 0.5180338249668202,
+      "observed_rate": 0.0
+    },
+    {
+      "n": 3,
+      "mean_predicted": 0.6878850841712913,
+      "observed_rate": 0.0
+    }
+  ]
+}
