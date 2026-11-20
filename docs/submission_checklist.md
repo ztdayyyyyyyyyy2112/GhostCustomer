@@ -8,7 +8,7 @@ Deadline in the team assignment: **before 20 November 2026**. Complete each item
 - [x] Visitor-level inferential test, OLS, logistic inference, short-series naive forecast, shared-split ML comparison, and observation-only ablation were reproduced from real artifacts. See E-04–E-08. Their operational definitions remain proposals.
 - [x] The structural artifact checker passed 97,489 detail files; all seven real API routes and 404/422 cases passed. Python: 122 tests passed. Frontend: lint and real-mode production build passed.
 - [x] A 12-slide Vietnamese defense draft was exported and passed package/layout validation: `reports/slides/defense_deck.pptx`. The route-by-route speaker notes are in `reports/defense/brief.md` and `docs/demo_script.md`.
-- [ ] The English full report DOCX is a **9-page review draft**, below the approximately 30-page target. The two-column paper DOCX is a **4-page review draft**, below the 7–10-page target and not yet in the official IEEE template. The team must expand and verify them before submission.
+- [ ] The English full report DOCX is a **9-page review draft**, below the approximately 30-page target. The two-column paper DOCX is a **7-page review draft** with figures and tables, but is not yet in the official IEEE template. The team must expand the full report, apply the IEEE template, and verify both before submission.
 - [ ] D-01–D-05 (cohort, label, windows and split) and D-07 (SEM) need a documented scientific/lecturer decision. No SEM result or ARIMA claim has been invented.
 - [ ] A narrated demo video, similarity/AI audit screenshots, final class/group repo name, and course-system uploads require the responsible people and accounts. No submission is claimed.
 
