@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+from concurrent.futures import ThreadPoolExecutor, TimeoutError
+from threading import BoundedSemaphore
 from importlib import import_module
 from typing import Any
 from fastapi import HTTPException
@@ -13,6 +15,16 @@ from backend.app.schemas.api import (
     PredictResponse,
 )
 from backend.app.services.customer_service import _load_customers_pool
+
+
+_runtime_slots = BoundedSemaphore(2)
+_runtime_executor = ThreadPoolExecutor(max_workers=2, thread_name_prefix="predict")
+INFERENCE_TIMEOUT_SECONDS = 5.0
+
+
+def _call_runtime(payload: dict) -> dict:
+    runtime = import_module("ai.inference.runtime")
+    return runtime.predict(payload)
 
 
 def _load_fixtures() -> dict[str, Any] | None:
@@ -29,10 +41,20 @@ def _run_real_predict(request: PredictRequest) -> PredictResponse | None:
     runtime_path = settings.MODELS_DIR.parent / "inference" / "runtime.py"
     if not runtime_path.exists():
         return None
+    if not _runtime_slots.acquire(blocking=False):
+        raise HTTPException(status_code=503, detail="Prediction runtime busy")
     try:
-        runtime = import_module("ai.inference.runtime")
-        prediction = runtime.predict(request.model_dump(exclude_none=True))
+        future = _runtime_executor.submit(_call_runtime, request.model_dump(exclude_none=True))
+    except RuntimeError as exc:
+        _runtime_slots.release()
+        raise HTTPException(status_code=503, detail="Prediction model unavailable") from exc
+    future.add_done_callback(lambda _: _runtime_slots.release())
+    try:
+        prediction = future.result(timeout=INFERENCE_TIMEOUT_SECONDS)
         return PredictResponse.model_validate(prediction)
+    except TimeoutError as exc:
+        future.cancel()
+        raise HTTPException(status_code=504, detail="Prediction runtime timed out") from exc
     except LookupError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     except ValueError as exc:
