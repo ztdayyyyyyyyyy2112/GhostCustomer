@@ -1,6 +1,6 @@
 """Generate accepted /api/predict response examples for E-08 (run where the model lives).
 
-    python -m ai.inference.examples                   # writes docs/predict_examples.json
+    python -m ai.inference.examples                   # writes data/processed/predict_examples.json
 
 Calls the same `runtime.predict` the backend uses and records one success,
 one unknown customer (404) and one invalid request (422) with the exact
@@ -15,7 +15,7 @@ import pandas as pd
 
 from . import runtime
 
-OUT = Path(__file__).resolve().parents[2] / "docs" / "predict_examples.json"
+OUT = Path(__file__).resolve().parents[2] / "data" / "processed" / "predict_examples.json"
 
 
 def _call(payload):
@@ -44,6 +44,7 @@ def main() -> None:
     doc = {"model_version": art["model_version"], "split_version": art.get("split_version"),
            "scenario_id": scenario, "generated_utc": pd.Timestamp.now(tz="UTC").isoformat(),
            "examples": examples}
+    OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(doc, indent=2, ensure_ascii=False), encoding="utf-8")
     print(json.dumps(doc, indent=2, ensure_ascii=False))
     print(f"Wrote {OUT}")

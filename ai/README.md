@@ -24,7 +24,7 @@ Synthetic runs always write to `data/processed/ai_dryrun/` (ignored by Git) and 
 `ghost-xgboost-cal-27f274df`: test PR-AUC 0.928 [0.887, 0.958] vs EDS rule 0.802 and no-skill 0.254. Outputs are in `ai/evaluation/`, the write-up is in `reports/full-report/ml_results.md`, and the figures are in `ai/evaluation/figures/`. Decision Tree and Gaussian NB on the same split: `ai/evaluation/benchmark_shared_split.json`.
 
 - **Notebooks** (`ai/notebooks/01_baselines` … `06_shap`) read these outputs; set `RERUN = True` in the first cell to retrain.
-- **API examples for E-08**: on the machine that holds `ai/models/ghost_model.joblib` and `data/processed/customer_features.parquet`, run `python -m ai.inference.examples`. It writes `docs/predict_examples.json` (one 200, one 404, one 422).
+- **API examples for E-08**: on the machine that holds `ai/models/ghost_model.joblib` and `data/processed/customer_features.parquet`, run `python -m ai.inference.examples`. It writes ignored `data/processed/predict_examples.json` (one 200, one 404, one 422). Review it privately; it contains a real visitor ID and score.
 
 ## Pipeline
 
