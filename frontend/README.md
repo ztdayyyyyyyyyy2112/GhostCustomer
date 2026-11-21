@@ -27,6 +27,7 @@ Open <http://localhost:3000>. `/` redirects to `/dashboard`.
 | `/forecast` | Observed, fitted, and predicted time series when available |
 | `/predict` | Prediction form, model version, score, and available factors |
 | `/models` | Held-out metrics and calibration when available |
+| `/algorithms` | Expandable, read-only summary of statistics, regressions, forecast, and classifier benchmarks from tracked aggregate research artifacts in real mode |
 
 ## Data mode
 
