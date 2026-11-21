@@ -1,0 +1,4 @@
+numpy>=2,<3
+pandas>=2.2,<4
+statsmodels>=0.14.4,<0.16
+matplotlib>=3.9,<4

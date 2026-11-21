@@ -1,0 +1,133 @@
+{
+  "algorithm": "GaussianNB",
+  "owner": "Cao Phan Lam",
+  "input_sha256": "f39af40962be6bb440f32fb63cd8e7ddf116f508ea95d8a35482dc5264df36dd",
+  "label_version": "ghost-baseline-ratio-v1-proposed",
+  "split_version": "visitor-temporal-v1_tr2015-07-06_va2015-07-27_te2015-08-24_f50-25-25_s3013",
+  "observed_through": "2015-09-14",
+  "feature_names": [
+    "feature_sessions_1w",
+    "feature_sessions_2w",
+    "feature_sessions_4w",
+    "feature_sessions_6w",
+    "feature_views_1w",
+    "feature_views_2w",
+    "feature_views_4w",
+    "feature_views_6w",
+    "feature_carts_1w",
+    "feature_carts_2w",
+    "feature_carts_4w",
+    "feature_carts_6w",
+    "feature_purchases_1w",
+    "feature_purchases_2w",
+    "feature_purchases_4w",
+    "feature_purchases_6w",
+    "feature_events_1w",
+    "feature_events_2w",
+    "feature_events_4w",
+    "feature_events_6w",
+    "feature_active_days_4w",
+    "feature_recency_days",
+    "feature_days_since_last_view",
+    "feature_days_since_last_cart",
+    "feature_days_since_last_purchase",
+    "feature_frequency_events_per_active_week",
+    "feature_baseline_sessions_per_week",
+    "feature_observation_sessions_per_week",
+    "feature_baseline_events_per_week",
+    "feature_observation_events_per_week",
+    "feature_decay_ratio",
+    "feature_decay_ratio_is_null",
+    "feature_eds",
+    "feature_eds_is_null",
+    "feature_slope_sessions_6w",
+    "feature_slope_sessions_6w_is_null",
+    "feature_cart_to_view",
+    "feature_cart_to_view_is_null",
+    "feature_any_purchase_pre",
+    "feature_n_distinct_items_pre",
+    "feature_total_events_pre"
+  ],
+  "excluded_status_counts": {},
+  "selected_on": "validation PR-AUC",
+  "smoothing_candidates": [
+    1e-12,
+    1e-10,
+    1e-09,
+    1e-07,
+    1e-05
+  ],
+  "hyperparameters": {
+    "var_smoothing": 1e-09
+  },
+  "decision_threshold": 0.5,
+  "train": {
+    "n": 2214,
+    "ghost_n": 433
+  },
+  "validation": {
+    "n": 454,
+    "ghost_n": 119,
+    "ghost_prevalence": 0.2621145374449339,
+    "pr_auc": 0.7279964857328219,
+    "roc_auc": 0.849002884735984,
+    "precision": 0.6041666666666666,
+    "recall": 0.7310924369747899,
+    "f1": 0.6615969581749049,
+    "brier": 0.16694320685085656,
+    "confusion_matrix": [
+      [
+        278,
+        57
+      ],
+      [
+        32,
+        87
+      ]
+    ]
+  },
+  "test": {
+    "n": 430,
+    "ghost_n": 109,
+    "ghost_prevalence": 0.2534883720930233,
+    "pr_auc": 0.6667678768538929,
+    "roc_auc": 0.8609420103461087,
+    "precision": 0.5496688741721855,
+    "recall": 0.7614678899082569,
+    "f1": 0.6384615384615384,
+    "brier": 0.19166215011600882,
+    "confusion_matrix": [
+      [
+        253,
+        68
+      ],
+      [
+        26,
+        83
+      ]
+    ]
+  },
+  "majority_test": {
+    "n": 430,
+    "ghost_n": 109,
+    "ghost_prevalence": 0.2534883720930233,
+    "pr_auc": 0.2534883720930233,
+    "roc_auc": 0.5,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "brier": 0.2534883720930233,
+    "confusion_matrix": [
+      [
+        321,
+        0
+      ],
+      [
+        109,
+        0
+      ]
+    ]
+  },
+  "assumption": "Features are conditionally independent and Gaussian within each class.",
+  "notice": "Research benchmark only. Gaussian and conditional-independence assumptions may fit skewed event counts poorly; interpret only with an approved real-data cohort, label, feature allowlist, and shared temporal split."
+}

@@ -1,0 +1,4 @@
+# Reproduce the 20 November 2026 real-data run and SHAP table.
+-r requirements.txt
+xgboost==3.4.1
+shap==0.54.1
