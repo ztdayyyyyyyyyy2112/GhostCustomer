@@ -6,56 +6,74 @@ STAT3013 project: early detection of silent customer disengagement in e-commerce
 
 The repository now contains a reproducible **local real-data demo**: data pipeline, descriptive and inferential statistics, OLS and logistic regression, a short-series naive forecast, model evaluation, saved-model inference, seven API routes, and a Next.js dashboard. On 20 November 2026 the integrated real-data check passed locally. Raw/processed visitor data and the trained model stay out of Git, so a new machine must rebuild them. The 4+2+2 cohort and Ghost label remain proposed research decisions; see `docs/decision_log.md` and the observation-only ablation before making performance claims.
 
-## Rebuild the real-data demo
+## Run the complete project locally (Windows PowerShell)
 
-Save the Retailrocket Kaggle v2 `events.csv` at `data/raw/events.csv`. Its SHA-256 must match `data/config/pipeline.json`. In a Python 3.12+ virtual environment, from the repository root:
+This is the **real-data** path for a personal demo machine. You need Git, Python 3.12 or newer, Node.js 24 with npm, and the Retailrocket Kaggle v2 `events.csv`. The raw data, processed visitor files and trained model are deliberately absent from Git. Run all commands from the repository root unless a step says otherwise. Use two terminals for the API and website.
 
-```bash
-python -m pip install -r requirements-defense.txt
-python -m scripts.prepare_real_demo
-```
+1. Clone the team integration branch (or update an existing clone):
 
-This command rebuilds the ignored processed tables and model, tracked aggregate research results, and then checks all seven real API routes. It takes several minutes. With already verified processed tables, use `python -m scripts.prepare_real_demo --from-processed`. See `docs/runbook.md` for the exact study limitations and frontend setup.
+   ```powershell
+   git clone https://github.com/ztdayyyyyyyyyy2112/GhostCustomer.git
+   Set-Location GhostCustomer
+   git switch develop
+   git pull --ff-only origin develop
+   ```
 
-## Run the frontend
+2. Download the [Retailrocket e-commerce dataset](https://www.kaggle.com/datasets/retailrocket/ecommerce-dataset), version 2. Put **only** its `events.csv` at `data/raw/events.csv`. Check that `Get-FileHash data/raw/events.csv -Algorithm SHA256` returns `3745aa83238b1e6d44d8fda209807899f420084398f94ddf745f3cbcfecbf9e7`. The pipeline also verifies the 94,237,913-byte source against `data/config/pipeline.json`. Do not commit the CSV.
 
-Requires Node.js 24 and npm. From the repository root:
+3. Create the Python environment and rebuild the data, analyses and model. Calling the virtual environment's Python directly avoids PowerShell activation-policy issues:
 
-```bash
-cd frontend
-cp .env.example .env.local
-npm ci
-npm run dev
-```
+   ```powershell
+   py -3.12 -m venv .venv
+   .\.venv\Scripts\python.exe -m pip install -r requirements-defense.txt
+   .\.venv\Scripts\python.exe -m scripts.prepare_real_demo
+   ```
 
-On PowerShell, use `Copy-Item .env.example .env.local` instead of `cp` if needed. Open <http://localhost:3000>. The default `NEXT_PUBLIC_API_MODE=mock` needs no backend. Run `npm run lint` and `npm run build` before a PR.
+   If `py -3.12` is unavailable, use an installed Python 3.12+ executable to create `.venv`. The final command takes several minutes. It generates local processed files and the ignored model binary, updates aggregate research outputs, and checks all seven API routes. On the **same machine**, when the processed files already exist and match the pinned source, `python -m scripts.prepare_real_demo --from-processed` can rerun the analyses; use `.\.venv\Scripts\python.exe` in place of `python`. Review any changed tracked result files before committing them.
 
-## Run the backend
+4. Confirm the research artifacts before opening the website:
 
-Requires Python 3.10+. From the repository root:
+   ```powershell
+   .\.venv\Scripts\python.exe scripts/check_integration_artifacts.py --require-complete
+   .\.venv\Scripts\python.exe -m scripts.verify_real_demo
+   ```
 
-```bash
-pip install -r backend/requirements.txt
-python -m uvicorn backend.app.main:app --reload --port 8000
-```
+   The second command should report `"data_mode": "real"`, `"api_endpoints_checked": 7` and a model version. It also checks valid prediction and 404/422 error behavior. It runs without a separately started API server.
 
-Run backend unit and integration tests:
+5. Configure the frontend in **real** mode. Copy the example, then edit `frontend/.env.local` to contain these values:
 
-```bash
-python -m pytest backend/tests -v
-```
+   ```powershell
+   Copy-Item frontend/.env.example frontend/.env.local
+   npm --prefix frontend ci
+   ```
 
-Check the status and shape of research handoff files without modifying them:
+   ```dotenv
+   NEXT_PUBLIC_API_MODE=real
+   NEXT_PUBLIC_API_URL=http://localhost:8000
+   NEXT_PUBLIC_MOCK_ERROR=0
+   ```
 
-```bash
-python scripts/check_integration_artifacts.py
-```
+   Keep `ENABLE_DEMO_FIXTURES` unset. `mock` and fixture modes are for interface testing and must not be presented as research results.
 
-After rebuilding local artifacts, use `--require-complete` to fail on missing files. This checks structure and does not replace scientific review.
+6. Start the API in **terminal A**, from the repository root:
 
-Swagger API documentation is available at <http://localhost:8000/docs>. To connect the frontend in real mode, set `NEXT_PUBLIC_API_MODE=real` and `NEXT_PUBLIC_API_URL=http://localhost:8000` in `frontend/.env.local`.
+   ```powershell
+   .\.venv\Scripts\python.exe -m uvicorn backend.app.main:app --port 8000
+   ```
 
-For a full-stack interface check before research outputs arrive, start the backend with `ENABLE_DEMO_FIXTURES=1` (PowerShell: `$env:ENABLE_DEMO_FIXTURES='1'`). Fixture responses are visibly marked as illustrative. Remove the variable and restart the backend for normal empty/unavailable behavior. Rebuild the frontend after changing `NEXT_PUBLIC_*` values for a production run.
+   Check <http://localhost:8000/health> and <http://localhost:8000/docs>.
+
+7. Start the website in **terminal B**, from the same root:
+
+   ```powershell
+   npm --prefix frontend run dev
+   ```
+
+   Open <http://localhost:3000/dashboard>. Visit Customers, Statistics, Forecast, Prediction and Model Metrics. Stop the servers with `Ctrl+C`. Restart the frontend after changing `.env.local`; rebuild it after changing `NEXT_PUBLIC_*` values for a production run.
+
+For a final local check, run `.\.venv\Scripts\python.exe -m pytest data/scripts/tests ai/tests research/baselines/tests research/forecasting/tests research/regression/tests backend/tests -q`, `npm --prefix frontend run lint`, and `npm --prefix frontend run build`. If the website displays sample values, check `NEXT_PUBLIC_API_MODE=real` and restart Next.js. If prediction returns 503, the local trained model is missing; repeat step 3. Do not replace the pinned CSV with another dataset version to bypass a hash mismatch.
+
+The [research runbook](docs/runbook.md) explains the cohort and evaluation limits. The [eight-minute video script](docs/demo_video_8min.md) covers the website and every implemented algorithm. The [English full report](reports/full-report/GhostCustomer_STAT3013_Full_Report_EN.docx) contains the detailed methods and tables.
 
 ## Repository layout
 
