@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { isMockMode } from "@/lib/api";
 
-type Section = "dashboard" | "customers" | "statistics" | "forecast" | "predict" | "models";
+type Section = "dashboard" | "customers" | "statistics" | "forecast" | "predict" | "models" | "algorithms";
 
 export function AppHeader({ current }: { current: Section }) {
   return (
@@ -17,6 +17,7 @@ export function AppHeader({ current }: { current: Section }) {
         <Link href="/forecast" aria-current={current === "forecast" ? "page" : undefined}>Dự báo</Link>
         <Link href="/predict" aria-current={current === "predict" ? "page" : undefined}>Dự đoán</Link>
         <Link href="/models" aria-current={current === "models" ? "page" : undefined}>Mô hình</Link>
+        <Link href="/algorithms" aria-current={current === "algorithms" ? "page" : undefined}>Thuật toán</Link>
       </nav>
       <span className="mode-badge">{isMockMode() ? "CHẾ ĐỘ MOCK" : "DỮ LIỆU API"}</span>
     </header>
